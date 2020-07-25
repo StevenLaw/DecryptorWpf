@@ -338,3 +338,10 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Out of solution test adapter files
+Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+testhost.dll
+testhost.exe
