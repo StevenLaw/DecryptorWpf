@@ -1,0 +1,67 @@
+﻿<Window x:Class="Decryptor.View.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Decryptor.View"
+        mc:Ignorable="d"
+        Title="AboutWindow"
+        ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="250"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+    </Window.Resources>
+    <StackPanel Orientation="Horizontal">
+        <Image Source="/Resources/BlueKey.ico" 
+               Stretch="None" 
+               VerticalAlignment="Top"
+               Margin="10"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Label x:Name="lblProduct"
+                   FontWeight="Bold"
+                   FontSize="24"
+                   HorizontalAlignment="Center"/>
+
+            <Label x:Name="lblVersion" Grid.Row="1"/>
+
+            <Label x:Name="lblCopyright" Grid.Row="2"/>
+
+            <TextBlock x:Name="tblkDescription" Grid.Row="3"/>
+
+            <TextBlock Grid.Row="4">
+                Icons generated from 
+                <Hyperlink NavigateUri="https://iconmonstr.com/"
+                           RequestNavigate="Hyperlink_RequestNavigate">
+                    iconmonstr
+                </Hyperlink>
+            </TextBlock>
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Grid.Row="5">
+                <Button Content="Close"
+                        IsDefault="True"
+                        IsCancel="True"
+                        Width="50"
+                        Click="Button_Click"/>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</Window>

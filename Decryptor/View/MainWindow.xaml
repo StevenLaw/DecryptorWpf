@@ -12,10 +12,12 @@
         Icon="/Resources/BlueKey.ico"
         DataContext="{StaticResource vm}">
     <Window.Resources>
+        <RoutedUICommand x:Key="AboutCommand_Execute" Text="About"/>
         <RoutedUICommand x:Key="ExitCommand_Execute" Text="Exit"/>
         <RoutedUICommand x:Key="SettingsCommand_Execute" Text="Settings"/>
     </Window.Resources>
     <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource AboutCommand_Execute}" Executed="AboutCommand_Execute"/>
         <CommandBinding Command="{StaticResource ExitCommand_Execute}" Executed="ExitCommand_Execute"/>
         <CommandBinding Command="{StaticResource SettingsCommand_Execute}" Executed="SettingsCommand_Execute"/>
     </Window.CommandBindings>
@@ -42,30 +44,41 @@
                           InputGestureText="Ctrl+Q"/>
             </MenuItem>
             <MenuItem Header="Hash _Algorithm">
-                <MenuItem Header="BCrypt"
-                          IsChecked="True"
-                          IsCheckable="True"/>
-                <MenuItem Header="Scrypt"
+                <MenuItem x:Name="miBCrypt" 
+                          Header="BCrypt"
+                          Click="MenuItem_Click"/>
+                <MenuItem x:Name="miScrypt"
+                          Header="Scrypt"
+                          Click="MenuItem_Click"/>
+                <MenuItem x:Name="miArgon2" 
+                          Header="Argon2"
                           IsCheckable="True"
-                          IsEnabled="False"/>
-                <MenuItem Header="Argon2"
+                          IsEnabled="False"
+                          Click="MenuItem_Click"/>
+                <MenuItem x:Name="miMD5"
+                          Header="MD5"
                           IsCheckable="True"
-                          IsEnabled="False"/>
-                <MenuItem Header="MD5"
+                          IsEnabled="False"
+                          Click="MenuItem_Click"/>
+                <MenuItem x:Name="miSHA1" 
+                          Header="SHA1"
                           IsCheckable="True"
-                          IsEnabled="False"/>
-                <MenuItem Header="SHA-1"
+                          IsEnabled="False"
+                          Click="MenuItem_Click"/>
+                <MenuItem x:Name="miSHA256"
+                          Header="SHA256"
                           IsCheckable="True"
-                          IsEnabled="False"/>
-                <MenuItem Header="SHA-256"
+                          IsEnabled="False"
+                          Click="MenuItem_Click"/>
+                <MenuItem x:Name="miSHA512"
+                          Header="SHA512"
                           IsCheckable="True"
-                          IsEnabled="False"/>
-                <MenuItem Header="SHA-512"
-                          IsCheckable="True"
-                          IsEnabled="False"/>
+                          IsEnabled="False"
+                          Click="MenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_About"/>
+                <MenuItem Header="_About"
+                          Command="{StaticResource AboutCommand_Execute}"/>
             </MenuItem>
         </Menu>
         <StatusBar DockPanel.Dock="Bottom" 

@@ -5,20 +5,29 @@
     <Setting Name="Key" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="WorkFactor" Type="System.Int32" Scope="User">
+    <Setting Name="BCryptWorkFactor" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">12</Value>
     </Setting>
     <Setting Name="HashAlgorithm" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="DegreesOfParallelism" Type="System.Int32" Scope="User">
+    <Setting Name="Argon2DegreesOfParallelism" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">8</Value>
     </Setting>
-    <Setting Name="Iterations" Type="System.Int32" Scope="User">
+    <Setting Name="Argon2Iterations" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">4</Value>
     </Setting>
-    <Setting Name="MemorySize" Type="System.Int32" Scope="User">
+    <Setting Name="Argon2MemorySize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1048576</Value>
+    </Setting>
+    <Setting Name="ScryptIterationCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">16384</Value>
+    </Setting>
+    <Setting Name="ScryptBlockCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="ScryptThreadCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
     </Setting>
   </Settings>
 </SettingsFile>

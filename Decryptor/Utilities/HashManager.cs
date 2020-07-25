@@ -1,6 +1,8 @@
 ﻿using DevOne.Security.Cryptography.BCrypt;
+using Scrypt;
 using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -10,8 +12,11 @@ namespace Decryptor.Utilities
     {
         private readonly HashAlgorithm _algorithm;
         private readonly int _workFactor;
+        private readonly int _scryptIterations;
+        private readonly int _blockCount;
+        private readonly int _threadCount;
         private readonly int _degreesOfParallelism;
-        private readonly int _iterations;
+        private readonly int _argon2Iterations;
         private readonly int _memorySize;
 
         //public HashManager(HashAlgorithm algorithm)
@@ -24,22 +29,28 @@ namespace Decryptor.Utilities
         //    _memorySize = Properties.Settings.Default.MemorySize;
         //}
 
-        public HashManager(HashAlgorithm algorithm, int workFactor, int degrees, int iterations, int memorySize)
+        public HashManager(HashAlgorithm algorithm, int workFactor, int scryptIterations, int blockCount, int threadCount, int degrees, int argon2Iterations, int memorySize)
         {
             _algorithm = algorithm;
             _workFactor = workFactor;
+            _scryptIterations = scryptIterations;
+            _blockCount = blockCount;
+            _threadCount = threadCount;
             _degreesOfParallelism = degrees;
-            _iterations = iterations;
+            _argon2Iterations = argon2Iterations;
             _memorySize = memorySize;
         }
 
         public static HashManager NewHashManager(HashAlgorithm algorithm)
         {
             return new HashManager(algorithm,
-                                   Properties.Settings.Default.WorkFactor,
-                                   Properties.Settings.Default.DegreesOfParallelism,
-                                   Properties.Settings.Default.Iterations,
-                                   Properties.Settings.Default.MemorySize);
+                                   Properties.Settings.Default.BCryptWorkFactor,
+                                   Properties.Settings.Default.ScryptIterationCount,
+                                   Properties.Settings.Default.ScryptBlockCount,
+                                   Properties.Settings.Default.ScryptThreadCount,
+                                   Properties.Settings.Default.Argon2DegreesOfParallelism,
+                                   Properties.Settings.Default.Argon2Iterations,
+                                   Properties.Settings.Default.Argon2MemorySize);
         }
 
         public string GetHash(string input)
@@ -48,7 +59,7 @@ namespace Decryptor.Utilities
             {
                 HashAlgorithm.BCrypt => GetBCryptHash(input),
                 HashAlgorithm.None => throw new NotImplementedException(),
-                HashAlgorithm.Scrypt => throw new NotImplementedException(),
+                HashAlgorithm.Scrypt => GetScryptHash(input),
                 HashAlgorithm.Argon2 => throw new NotImplementedException(),
                 HashAlgorithm.MD5 => throw new NotImplementedException(),
                 HashAlgorithm.SHA1 => throw new NotImplementedException(),
@@ -58,13 +69,13 @@ namespace Decryptor.Utilities
             };
         }
 
-        public bool CheckHash(string input, string hash)
+        public bool CheckHash(string clearText, string hash)
         {
             return _algorithm switch
             {
-                HashAlgorithm.BCrypt => CheckBCryptHash(input, hash),
+                HashAlgorithm.BCrypt => CheckBCryptHash(clearText, hash),
                 HashAlgorithm.None => throw new NotImplementedException(),
-                HashAlgorithm.Scrypt => throw new NotImplementedException(),
+                HashAlgorithm.Scrypt => CheckScryptHash(clearText, hash),
                 HashAlgorithm.Argon2 => throw new NotImplementedException(),
                 HashAlgorithm.MD5 => throw new NotImplementedException(),
                 HashAlgorithm.SHA1 => throw new NotImplementedException(),
@@ -80,11 +91,30 @@ namespace Decryptor.Utilities
             return BCryptHelper.HashPassword(input, salt);
         }
 
-        private bool CheckBCryptHash(string input, string hash)
+        private bool CheckBCryptHash(string clearText, string hash)
         {
             try
             {
-                return BCryptHelper.CheckPassword(input, hash);
+                return BCryptHelper.CheckPassword(clearText, hash);
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+        }
+
+        private string GetScryptHash(string input)
+        {
+            ScryptEncoder encoder = new ScryptEncoder();
+            return encoder.Encode(input);
+        }
+
+        private bool CheckScryptHash(string clearText, string hash)
+        {
+            ScryptEncoder encoder = new ScryptEncoder();
+            try
+            {
+                return encoder.Compare(clearText, hash);
             }
             catch (ArgumentException)
             {

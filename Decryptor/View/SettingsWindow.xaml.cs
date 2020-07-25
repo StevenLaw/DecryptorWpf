@@ -1,8 +1,7 @@
-﻿using Decryptor.Utilities;
-using Decryptor.ViewModel;
+﻿using Decryptor.ViewModel;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace Decryptor.View
 {
@@ -18,6 +17,19 @@ namespace Decryptor.View
             InitializeComponent();
 
             vm = DataContext as DecryptorViewModel;
+            SetupIterationComboBox();
+        }
+
+        private void SetupIterationComboBox()
+        {
+            var iterationValues = new List<int>();
+            int i = 2;
+            while (i > 0)
+            {
+                iterationValues.Add(i);
+                i *= 2;
+            }
+            cmbIterations.ItemsSource = iterationValues;
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)

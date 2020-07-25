@@ -18,8 +18,11 @@ namespace Decryptor.ViewModel
         private int _workFactor;
         private SecureString _password;
         private HashAlgorithm _hashAlgorithm;
+        private int _scryptIterations;
+        private int _blockCount;
+        private int _threadCount;
         private int _degreesOfParallelism;
-        private int _iterations;
+        private int _argon2Iterations;
         private int _memorySize;
         private bool? _checkSucceeded = null;
 
@@ -87,12 +90,12 @@ namespace Decryptor.ViewModel
                 NotifyPropertyChanged();
             }
         }
-        public int Iterations
+        public int Argon2Iterations
         {
-            get => _iterations;
+            get => _argon2Iterations;
             set
             {
-                _iterations = value;
+                _argon2Iterations = value;
                 NotifyPropertyChanged();
             }
         }
@@ -111,6 +114,33 @@ namespace Decryptor.ViewModel
             set
             {
                 _checkSucceeded = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public int ScryptIterations
+        {
+            get => _scryptIterations;
+            set
+            {
+                _scryptIterations = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public int BlockCount
+        {
+            get => _blockCount;
+            set
+            {
+                _blockCount = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public int ThreadCount
+        {
+            get => _threadCount;
+            set
+            {
+                _threadCount = value;
                 NotifyPropertyChanged();
             }
         }
@@ -152,11 +182,14 @@ namespace Decryptor.ViewModel
         public void LoadSettings()
         {
             Key = PasswordProtector.DecryptString(Properties.Settings.Default.Key);
-            WorkFactor = Properties.Settings.Default.WorkFactor;
+            WorkFactor = Properties.Settings.Default.BCryptWorkFactor;
             HashAlgorithm = (HashAlgorithm)Properties.Settings.Default.HashAlgorithm;
-            DegreesOfParallelism = Properties.Settings.Default.DegreesOfParallelism;
-            Iterations = Properties.Settings.Default.Iterations;
-            MemorySize = Properties.Settings.Default.MemorySize;
+            ScryptIterations = Properties.Settings.Default.ScryptIterationCount;
+            BlockCount = Properties.Settings.Default.ScryptBlockCount;
+            ThreadCount = Properties.Settings.Default.ScryptThreadCount;
+            DegreesOfParallelism = Properties.Settings.Default.Argon2DegreesOfParallelism;
+            Argon2Iterations = Properties.Settings.Default.Argon2Iterations;
+            MemorySize = Properties.Settings.Default.Argon2MemorySize;
 
             DecryptCommand.RaiseCanExecuteChanged();
             EncryptCommand.RaiseCanExecuteChanged();
@@ -165,11 +198,14 @@ namespace Decryptor.ViewModel
         public void SaveSettings()
         {
             Properties.Settings.Default.Key = PasswordProtector.GetEncryptedString(Key);
-            Properties.Settings.Default.WorkFactor = WorkFactor;
+            Properties.Settings.Default.BCryptWorkFactor = WorkFactor;
             Properties.Settings.Default.HashAlgorithm = (byte)HashAlgorithm;
-            Properties.Settings.Default.DegreesOfParallelism = DegreesOfParallelism;
-            Properties.Settings.Default.Iterations = Iterations;
-            Properties.Settings.Default.MemorySize = MemorySize;
+            Properties.Settings.Default.ScryptIterationCount = ScryptIterations;
+            Properties.Settings.Default.ScryptBlockCount = BlockCount;
+            Properties.Settings.Default.ScryptThreadCount = ThreadCount;
+            Properties.Settings.Default.Argon2DegreesOfParallelism = DegreesOfParallelism;
+            Properties.Settings.Default.Argon2Iterations = Argon2Iterations;
+            Properties.Settings.Default.Argon2MemorySize = MemorySize;
             Properties.Settings.Default.Save();
 
             DecryptCommand.RaiseCanExecuteChanged();

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xcd="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:uc="clr-namespace:Decryptor.UserControls"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:Decryptor.View"
         mc:Ignorable="d"
         Title="Settings" 
@@ -23,8 +24,6 @@
                 </Grid.ColumnDefinitions>
                 
                 <TextBlock Text="Key"/>
-                <!--<PasswordBox x:Name="key" Grid.Column="1" LostFocus="Key_LostFocus" KeyUp="Key_KeyUp"/>
-                <TextBox x:Name="keyVisible" Visibility="Collapsed" Grid.Column="1"/>-->
                 <uc:ViewablePasswordBox x:Name="key"
                                         Password="{Binding Key}"
                                         Grid.Column="1"/>
@@ -41,6 +40,38 @@
                 <xcd:IntegerUpDown Value="{Binding WorkFactor}" HorizontalAlignment="Stretch" Grid.Column="1"/>
             </Grid>
         </GroupBox>
+        <GroupBox Header="Scrypt">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Iteration Count"/>
+                <xcd:IntegerUpDown Value="{Binding ScryptIterations}" Grid.Column="1" Visibility="Collapsed"/>
+                <ComboBox x:Name="cmbIterations"
+                          SelectedItem="{Binding ScryptIterations}"
+                          Grid.Column="1"/>
+
+                <TextBlock Text="Block Size" Grid.Column="2"/>
+                <xcd:IntegerUpDown Minimum="1" 
+                                   Value="{Binding BlockCount}" 
+                                   Grid.Column="3"/>
+
+                <TextBlock Text="Thread Count" Grid.Row="1"/>
+                <xcd:IntegerUpDown Minimum="1" 
+                                   Value="{Binding ThreadCount}" 
+                                   Grid.Column="1" 
+                                   Grid.Row="1"/>
+            </Grid>
+        </GroupBox>
         <GroupBox Header="Argon2">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -48,8 +79,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
-                    <!--<ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>-->
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -57,13 +87,18 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Text="Degrees of Parallelism"/>
-                <xcd:IntegerUpDown Value="{Binding DegreesOfParallelism}" Grid.Column="1"/>
+                <xcd:IntegerUpDown Minimum="1" 
+                                   Value="{Binding DegreesOfParallelism}" 
+                                   Grid.Column="1"/>
 
                 <TextBlock Text="Iterations" Grid.Column="2"/>
-                <xcd:IntegerUpDown Value="{Binding Iterations}" Grid.Column="3"/>
+                <xcd:IntegerUpDown Minimum="1" 
+                                   Value="{Binding Argon2Iterations}" 
+                                   Grid.Column="3"/>
 
                 <TextBlock Text="Memory Size" Grid.Row="1"/>
-                <xcd:IntegerUpDown Value="{Binding MemorySize}" 
+                <xcd:IntegerUpDown Minimum="1" 
+                                   Value="{Binding MemorySize}" 
                                    Grid.Column="1" 
                                    Grid.Row="1"/>
             </Grid>

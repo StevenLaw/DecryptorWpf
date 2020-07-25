@@ -38,12 +38,12 @@ namespace Decryptor.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("12")]
-        public int WorkFactor {
+        public int BCryptWorkFactor {
             get {
-                return ((int)(this["WorkFactor"]));
+                return ((int)(this["BCryptWorkFactor"]));
             }
             set {
-                this["WorkFactor"] = value;
+                this["BCryptWorkFactor"] = value;
             }
         }
         
@@ -62,36 +62,72 @@ namespace Decryptor.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("8")]
-        public int DegreesOfParallelism {
+        public int Argon2DegreesOfParallelism {
             get {
-                return ((int)(this["DegreesOfParallelism"]));
+                return ((int)(this["Argon2DegreesOfParallelism"]));
             }
             set {
-                this["DegreesOfParallelism"] = value;
+                this["Argon2DegreesOfParallelism"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("4")]
-        public int Iterations {
+        public int Argon2Iterations {
             get {
-                return ((int)(this["Iterations"]));
+                return ((int)(this["Argon2Iterations"]));
             }
             set {
-                this["Iterations"] = value;
+                this["Argon2Iterations"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1048576")]
-        public int MemorySize {
+        public int Argon2MemorySize {
             get {
-                return ((int)(this["MemorySize"]));
+                return ((int)(this["Argon2MemorySize"]));
             }
             set {
-                this["MemorySize"] = value;
+                this["Argon2MemorySize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16384")]
+        public int ScryptIterationCount {
+            get {
+                return ((int)(this["ScryptIterationCount"]));
+            }
+            set {
+                this["ScryptIterationCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        public int ScryptBlockCount {
+            get {
+                return ((int)(this["ScryptBlockCount"]));
+            }
+            set {
+                this["ScryptBlockCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int ScryptThreadCount {
+            get {
+                return ((int)(this["ScryptThreadCount"]));
+            }
+            set {
+                this["ScryptThreadCount"] = value;
             }
         }
     }
