@@ -5,11 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Printing.IndexedProperties;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Navigation;
 
 namespace Decryptor.Utilities
 {
@@ -64,7 +66,7 @@ namespace Decryptor.Utilities
                 HashAlgorithm.Scrypt => await GetScryptHashAsync(input),
                 HashAlgorithm.Argon2 => await GetArgon2HashAsync(input),
                 HashAlgorithm.MD5 => await GetMD5HashAsync(input),
-                HashAlgorithm.SHA1 => throw new NotImplementedException(),
+                HashAlgorithm.SHA1 => await GetSHA1HashAsync(input),
                 HashAlgorithm.SHA256 => throw new NotImplementedException(),
                 HashAlgorithm.SHA512 => throw new NotImplementedException(),
                 HashAlgorithm.None => throw new NotImplementedException(),
@@ -80,7 +82,7 @@ namespace Decryptor.Utilities
                 HashAlgorithm.Scrypt => await CheckScryptHashAsync(clearText, hash),
                 HashAlgorithm.Argon2 => await CheckArgon2HashAsync(clearText, hash),
                 HashAlgorithm.MD5 => await CheckMD5HashAsync(clearText, hash),
-                HashAlgorithm.SHA1 => throw new NotImplementedException(),
+                HashAlgorithm.SHA1 => await CheckSHA1HashAsync(clearText, hash),
                 HashAlgorithm.SHA256 => throw new NotImplementedException(),
                 HashAlgorithm.SHA512 => throw new NotImplementedException(),
                 HashAlgorithm.None => throw new NotImplementedException(),
@@ -205,9 +207,27 @@ namespace Decryptor.Utilities
             });
         }
 
-        private async Task<bool> CheckMD5HashAsync(string clearText, string hash)
+        private async Task<bool> CheckMD5HashAsync(string clearText, string hash) => 
+            await GetMD5HashAsync(clearText) == hash;
+
+        private Task<string> GetSHA1HashAsync(string input)
         {
-            return await GetMD5HashAsync(clearText) == hash;
+            return Task.Run(() =>
+            {
+                using var sha1 = SHA1.Create();
+                byte[] bytes = Encoding.UTF8.GetBytes(input);
+                byte[] hash = sha1.ComputeHash(bytes);
+
+                var sb = new StringBuilder();
+                foreach (byte b in hash)
+                {
+                    sb.AppendFormat("{0:x}", b);
+                }
+                return sb.ToString();
+            });
         }
+
+        private async Task<bool> CheckSHA1HashAsync(string clearText, string hash) =>
+            await GetSHA1HashAsync(clearText) == hash;
     }
 }
