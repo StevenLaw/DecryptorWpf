@@ -37,6 +37,7 @@ namespace Decryptor.ViewModel.Commands
             try
             {
                 VM.Result = await aes.DecryptAsync(VM.Text);
+                VM.CheckSucceeded = null;
             }
             catch (Exception)
             {

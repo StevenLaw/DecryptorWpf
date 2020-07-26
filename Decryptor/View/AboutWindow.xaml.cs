@@ -18,7 +18,7 @@ namespace Decryptor.View
             lblProduct.Content = versionInfo.ProductName;
             lblVersion.Content = $"Version: {versionInfo.ProductVersion}";
             lblCopyright.Content = versionInfo.LegalCopyright;
-            tblkDescription.Text = versionInfo.FileDescription;
+            tblkDescription.Text = versionInfo.Comments;
         }
 
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)

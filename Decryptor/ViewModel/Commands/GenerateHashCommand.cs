@@ -35,6 +35,7 @@ namespace Decryptor.ViewModel.Commands
         {
             var hm = HashManager.NewHashManager(VM.HashAlgorithm);
             VM.Result = await hm.GetHashAsync(VM.Password.ToInsecureString());
+            VM.CheckSucceeded = null;
         }
     }
 }

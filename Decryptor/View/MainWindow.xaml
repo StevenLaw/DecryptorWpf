@@ -56,11 +56,9 @@
                           Click="MenuItem_Click"/>
                 <MenuItem x:Name="miSHA256"
                           Header="SHA256"
-                          IsEnabled="False"
                           Click="MenuItem_Click"/>
                 <MenuItem x:Name="miSHA512"
                           Header="SHA512"
-                          IsEnabled="False"
                           Click="MenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="_Help">

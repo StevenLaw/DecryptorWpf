@@ -300,7 +300,6 @@ namespace Decryptor.Utilities.Tests
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public async Task SHA256GetHashTest()
         {
             // Arrange
@@ -310,41 +309,38 @@ namespace Decryptor.Utilities.Tests
             string hash = await hm.GetHashAsync(sample);
 
             // Assert
-            //Assert.IsTrue(hash.Length > 0);
+            ////Assert.IsTrue(hash.Length > 0);
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public async Task SHA256CheckHashTest()
         {
             // Arrange
             var hm = GetHashManager(HashAlgorithm.SHA256);
-            string hash = "$2a$12$0W3HDzb4kSDKs4dUagmEzeVzFVQfR.IQga3NJn5lK5jwdeRUI.jZO";
+            string hash = "bf67a78f571d7ecad67ad2a5ea64edc969def57649c69fbb22eb72f4c56f87a";
 
             // Act
             bool matches = await hm.CheckHashAsync(sample, hash);
 
             // Assert
-            //Assert.IsTrue(matches);
+            Assert.IsTrue(matches);
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public async Task SHA256CheckHashFailTest()
         {
             // Arrange
             var hm = GetHashManager(HashAlgorithm.SHA256);
-            string failHash = "$2a$12$mnoK5//Ad5pFy1XnpLY1aeaN43B/7AtPaTIlbQujVNzY6x09P.ceG";
+            string failHash = "6fe7d7112caaba1b1bc7bfa656974ac416cc525a7286117494f5b29dfec1f77";
 
             // Act
             bool matches = await hm.CheckHashAsync(sample, failHash);
 
             // Assert
-            //Assert.IsFalse(matches);
+            Assert.IsFalse(matches);
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public async Task SHA256GetAndCheckHashTest()
         {
             // Arrange
@@ -355,11 +351,10 @@ namespace Decryptor.Utilities.Tests
             bool matches = await hm.CheckHashAsync(sample, hash);
 
             // Assert
-            //Assert.IsTrue(matches);
+            Assert.IsTrue(matches);
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public async Task SHA512GetHashTest()
         {
             // Arrange
@@ -369,41 +364,38 @@ namespace Decryptor.Utilities.Tests
             string hash = await hm.GetHashAsync(sample);
 
             // Assert
-            //Assert.IsTrue(hash.Length > 0);
+            Assert.IsTrue(hash.Length > 0);
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public async Task SHA512CheckHashTest()
         {
             // Arrange
             var hm = GetHashManager(HashAlgorithm.SHA512);
-            string hash = "$2a$12$0W3HDzb4kSDKs4dUagmEzeVzFVQfR.IQga3NJn5lK5jwdeRUI.jZO";
+            string hash = "cce3233e201810a61541ecc0e2a69bda7de751d8f35c2fcd7b19bd612543ae18885a1d7d32f3c46cc5cab91268a93b3d4431d3b14d6eee1e44954a4513b";
 
             // Act
             bool matches = await hm.CheckHashAsync(sample, hash);
 
             // Assert
-            //Assert.IsTrue(matches);
+            Assert.IsTrue(matches);
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public async Task SHA512CheckHashFailTest()
         {
             // Arrange
             var hm = GetHashManager(HashAlgorithm.SHA512);
-            string failHash = "$2a$12$mnoK5//Ad5pFy1XnpLY1aeaN43B/7AtPaTIlbQujVNzY6x09P.ceG";
+            string failHash = "c85fb94f63c5b9f93e495fb57589656d31b4411ec793a11fde64039fdaa2da859d14d41672414864691637f8265072f64e238d7ce277437927ca7ccbfa869c";
 
             // Act
             bool matches = await hm.CheckHashAsync(sample, failHash);
 
             // Assert
-            //Assert.IsFalse(matches);
+            Assert.IsFalse(matches);
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public async Task SHA512GetAndCheckHashTest()
         {
             // Arrange
@@ -414,7 +406,7 @@ namespace Decryptor.Utilities.Tests
             bool matches = await hm.CheckHashAsync(sample, hash);
 
             // Assert
-            //Assert.IsTrue(matches);
+            Assert.IsTrue(matches);
         }
     }
 }

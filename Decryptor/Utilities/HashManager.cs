@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 
 namespace Decryptor.Utilities
@@ -67,8 +68,8 @@ namespace Decryptor.Utilities
                 HashAlgorithm.Argon2 => await GetArgon2HashAsync(input),
                 HashAlgorithm.MD5 => await GetMD5HashAsync(input),
                 HashAlgorithm.SHA1 => await GetSHA1HashAsync(input),
-                HashAlgorithm.SHA256 => throw new NotImplementedException(),
-                HashAlgorithm.SHA512 => throw new NotImplementedException(),
+                HashAlgorithm.SHA256 => await GetSHA256HashAsync(input),
+                HashAlgorithm.SHA512 => await GetSHA512HashAsync(input),
                 HashAlgorithm.None => throw new NotImplementedException(),
                 _ => throw new InvalidOperationException($"{_algorithm} is not a valid algorithm"),
             };
@@ -83,8 +84,8 @@ namespace Decryptor.Utilities
                 HashAlgorithm.Argon2 => await CheckArgon2HashAsync(clearText, hash),
                 HashAlgorithm.MD5 => await CheckMD5HashAsync(clearText, hash),
                 HashAlgorithm.SHA1 => await CheckSHA1HashAsync(clearText, hash),
-                HashAlgorithm.SHA256 => throw new NotImplementedException(),
-                HashAlgorithm.SHA512 => throw new NotImplementedException(),
+                HashAlgorithm.SHA256 => await CheckSHA256HashAsync(clearText, hash),
+                HashAlgorithm.SHA512 => await CheckSHA512HashAsync(clearText, hash),
                 HashAlgorithm.None => throw new NotImplementedException(),
                 _ => throw new InvalidOperationException($"{_algorithm} is not a valid algorithm"),
             };
@@ -229,5 +230,45 @@ namespace Decryptor.Utilities
 
         private async Task<bool> CheckSHA1HashAsync(string clearText, string hash) =>
             await GetSHA1HashAsync(clearText) == hash;
+
+        private Task<string> GetSHA256HashAsync(string input)
+        {
+            return Task.Run(() =>
+            {
+                using var sha256 = SHA256.Create();
+                byte[] bytes = Encoding.UTF8.GetBytes(input);
+                byte[] hash = sha256.ComputeHash(bytes);
+
+                var sb = new StringBuilder();
+                foreach (byte b in hash)
+                {
+                    sb.AppendFormat("{0:x}", b);
+                }
+                return sb.ToString();
+            });
+        }
+
+        private async Task<bool> CheckSHA256HashAsync(string clearText, string hash) => 
+            await GetSHA256HashAsync(clearText) == hash;
+
+        private Task<string> GetSHA512HashAsync(string input)
+        {
+            return Task.Run(() =>
+            {
+                using var sha512 = SHA512.Create();
+                byte[] bytes = Encoding.UTF8.GetBytes(input);
+                byte[] hash = sha512.ComputeHash(bytes);
+
+                var sb = new StringBuilder();
+                foreach (byte b in hash)
+                {
+                    sb.AppendFormat("{0:x}", b);
+                }
+                return sb.ToString();
+            });
+        }
+
+        private async Task<bool> CheckSHA512HashAsync(string clearText, string hash) => 
+            await GetSHA512HashAsync(clearText) == hash;
     }
 }
