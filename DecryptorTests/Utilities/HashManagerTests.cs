@@ -190,7 +190,6 @@ namespace Decryptor.Utilities.Tests
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public async Task MD5GetHashTest()
         {
             // Arrange
@@ -200,41 +199,38 @@ namespace Decryptor.Utilities.Tests
             string hash = await hm.GetHashAsync(sample);
 
             // Assert
-            //Assert.IsTrue(hash.Length > 0);
+            Assert.IsTrue(hash.Length > 0);
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public async Task MD5CheckHashTest()
         {
             // Arrange
             var hm = GetHashManager(HashAlgorithm.MD5);
-            string hash = "$2a$12$0W3HDzb4kSDKs4dUagmEzeVzFVQfR.IQga3NJn5lK5jwdeRUI.jZO";
+            string hash = "636351fcb9197f5e75b84562858bbb1";
 
             // Act
             bool matches = await hm.CheckHashAsync(sample, hash);
 
             // Assert
-            //Assert.IsTrue(matches);
+            Assert.IsTrue(matches);
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public async Task MD5CheckHashFailTest()
         {
             // Arrange
             var hm = GetHashManager(HashAlgorithm.MD5);
-            string failHash = "$2a$12$mnoK5//Ad5pFy1XnpLY1aeaN43B/7AtPaTIlbQujVNzY6x09P.ceG";
+            string failHash = "7ff3e75ce6aca348bc513ed3d5882946";
 
             // Act
             bool matches = await hm.CheckHashAsync(sample, failHash);
 
             // Assert
-            //Assert.IsFalse(matches);
+            Assert.IsFalse(matches);
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public async Task MD5GetAndCheckHashTest()
         {
             // Arrange
@@ -245,7 +241,7 @@ namespace Decryptor.Utilities.Tests
             bool matches = await hm.CheckHashAsync(sample, hash);
 
             // Assert
-            //Assert.IsTrue(matches);
+            Assert.IsTrue(matches);
         }
 
         [TestMethod()]

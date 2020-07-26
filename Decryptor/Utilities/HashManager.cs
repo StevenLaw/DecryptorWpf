@@ -61,13 +61,13 @@ namespace Decryptor.Utilities
             return _algorithm switch
             {
                 HashAlgorithm.BCrypt => await GetBCryptHashAsync(input),
-                HashAlgorithm.None => throw new NotImplementedException(),
                 HashAlgorithm.Scrypt => await GetScryptHashAsync(input),
                 HashAlgorithm.Argon2 => await GetArgon2HashAsync(input),
-                HashAlgorithm.MD5 => throw new NotImplementedException(),
+                HashAlgorithm.MD5 => await GetMD5HashAsync(input),
                 HashAlgorithm.SHA1 => throw new NotImplementedException(),
                 HashAlgorithm.SHA256 => throw new NotImplementedException(),
                 HashAlgorithm.SHA512 => throw new NotImplementedException(),
+                HashAlgorithm.None => throw new NotImplementedException(),
                 _ => throw new InvalidOperationException($"{_algorithm} is not a valid algorithm"),
             };
         }
@@ -77,13 +77,13 @@ namespace Decryptor.Utilities
             return _algorithm switch
             {
                 HashAlgorithm.BCrypt => await CheckBCryptHashAsync(clearText, hash),
-                HashAlgorithm.None => throw new NotImplementedException(),
                 HashAlgorithm.Scrypt => await CheckScryptHashAsync(clearText, hash),
                 HashAlgorithm.Argon2 => await CheckArgon2HashAsync(clearText, hash),
-                HashAlgorithm.MD5 => throw new NotImplementedException(),
+                HashAlgorithm.MD5 => await CheckMD5HashAsync(clearText, hash),
                 HashAlgorithm.SHA1 => throw new NotImplementedException(),
                 HashAlgorithm.SHA256 => throw new NotImplementedException(),
                 HashAlgorithm.SHA512 => throw new NotImplementedException(),
+                HashAlgorithm.None => throw new NotImplementedException(),
                 _ => throw new InvalidOperationException($"{_algorithm} is not a valid algorithm"),
             };
         }
@@ -186,6 +186,28 @@ namespace Decryptor.Utilities
                 return newHash == hash;
             }
             return false;
+        }
+
+        private Task<string> GetMD5HashAsync(string input)
+        {
+            return Task.Run(() =>
+            {
+                using MD5 md5 = MD5.Create();
+                byte[] bytes = Encoding.UTF8.GetBytes(input);
+                byte[] hash = md5.ComputeHash(bytes);
+
+                var sb = new StringBuilder();
+                foreach (byte b in hash)
+                {
+                    sb.AppendFormat("{0:x}", b);
+                }
+                return sb.ToString();
+            });
+        }
+
+        private async Task<bool> CheckMD5HashAsync(string clearText, string hash)
+        {
+            return await GetMD5HashAsync(clearText) == hash;
         }
     }
 }

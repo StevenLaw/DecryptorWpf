@@ -23,9 +23,6 @@
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Command="{StaticResource ExitCommand_Execute}" Key="Q" Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding ClearCommand}" Key="Delete"/>
-        <KeyBinding Command="{Binding ClearCommand}" Key="Backspace"/>
-        <KeyBinding Command="{Binding CopyCommand}" Key="C" Modifiers="Ctrl"/>
     </Window.InputBindings>
     
     <DockPanel>
@@ -34,11 +31,9 @@
                 <MenuItem Header="_Settings"
                           Command="{StaticResource SettingsCommand_Execute}"/>
                 <MenuItem Header="_Copy Result"
-                          Command="{Binding CopyCommand}"
-                          InputGestureText="Ctrl+C"/>
+                          Command="{Binding CopyCommand}"/>
                 <MenuItem Header="C_lear Result"
-                          Command="{Binding ClearCommand}"
-                          InputGestureText="Del/Backspace"/>
+                          Command="{Binding ClearCommand}"/>
                 <MenuItem Header="_Exit"
                           Command="{StaticResource ExitCommand_Execute}"
                           InputGestureText="Ctrl+Q"/>
@@ -55,7 +50,6 @@
                           Click="MenuItem_Click"/>
                 <MenuItem x:Name="miMD5"
                           Header="MD5"
-                          IsEnabled="False"
                           Click="MenuItem_Click"/>
                 <MenuItem x:Name="miSHA1" 
                           Header="SHA1"
