@@ -3,6 +3,7 @@ using System.IO;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Decryptor.Utilities
 {
@@ -29,7 +30,7 @@ namespace Decryptor.Utilities
         /// <returns>
         /// the encrypted text.
         /// </returns>
-        public string Encrypt(string clearText)
+        public async Task<string> EncryptAsync(string clearText)
         {
             byte[] clearBytes = Encoding.UTF8.GetBytes(clearText);
             using Aes aes = Aes.Create();
@@ -46,7 +47,7 @@ namespace Decryptor.Utilities
             using var cs = new CryptoStream(ms,
                                              aes.CreateEncryptor(),
                                              CryptoStreamMode.Write);
-            cs.Write(clearBytes, 0, clearBytes.Length);
+            await cs.WriteAsync(clearBytes, 0, clearBytes.Length);
             cs.Close();
             return Convert.ToBase64String(ms.ToArray());
         }
@@ -58,7 +59,7 @@ namespace Decryptor.Utilities
         /// <returns>
         /// the decrypted text.
         /// </returns>
-        public string Decrypt(string cypherText)
+        public async Task<string> DecryptAsync(string cypherText)
         {
             byte[] cypherBytes = Convert.FromBase64String(cypherText);
             using Aes aes = Aes.Create();
@@ -73,7 +74,7 @@ namespace Decryptor.Utilities
             aes.IV = pdb.GetBytes(IVSize);
             using var ms = new MemoryStream();
             using var cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Write);
-            cs.Write(cypherBytes, 0, cypherBytes.Length);
+            await cs.WriteAsync(cypherBytes, 0, cypherBytes.Length);
             cs.Close();
             return Encoding.UTF8.GetString(ms.ToArray());
         }

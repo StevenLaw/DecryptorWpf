@@ -31,12 +31,12 @@ namespace Decryptor.ViewModel.Commands
                 !string.IsNullOrWhiteSpace(VM.Text);
         }
 
-        public void Execute(object parameter)
+        public async void Execute(object parameter)
         {
             var aes = new SimpleAes(VM.Key);
             try
             {
-                VM.Result = aes.Encrypt(VM.Text);
+                VM.Result = await aes.EncryptAsync(VM.Text);
             }
             catch (Exception)
             {

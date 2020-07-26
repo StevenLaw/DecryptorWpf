@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 using System.Security;
+using System.Threading.Tasks;
 
 namespace Decryptor.Utilities.Tests
 {
@@ -23,13 +24,13 @@ namespace Decryptor.Utilities.Tests
         }
 
         [TestMethod()]
-        public void EncryptTest()
+        public async Task EncryptTest()
         {
             // Arange
             var aes = new SimpleAes(key);
 
             // Act
-            string encrypted = aes.Encrypt(sample);
+            string encrypted = await aes.EncryptAsync(sample);
             Debug.WriteLine(encrypted);
 
             // Assert
@@ -37,41 +38,41 @@ namespace Decryptor.Utilities.Tests
         }
 
         [TestMethod()]
-        public void DecryptTest()
+        public async Task DecryptTest()
         {
             // Arange
             var aes = new SimpleAes(key);
 
             // Act
-            string decrypted = aes.Decrypt(result);
+            string decrypted = await aes.DecryptAsync(result);
 
             // Assert
             Assert.AreEqual(sample, decrypted);
         }
 
         [TestMethod]
-        public void EncryptDecryptTest()
+        public async Task EncryptDecryptTest()
         {
             // Arange
             var aes = new SimpleAes(key);
 
             // Act
-            string encrypted = aes.Encrypt(sample);
-            string decrypted = aes.Decrypt(encrypted);
+            string encrypted = await aes.EncryptAsync(sample);
+            string decrypted = await aes.DecryptAsync(encrypted);
 
             // Assert
             Assert.AreEqual(sample, decrypted);
         }
 
         [TestMethod]
-        public void DecryptEncryptTest()
+        public async Task DecryptEncryptTest()
         {
             // Arrange
             var aes = new SimpleAes(key);
 
             // Act
-            string decrypted = aes.Decrypt(result);
-            string encrypted = aes.Encrypt(decrypted);
+            string decrypted = await aes.DecryptAsync(result);
+            string encrypted = await aes.EncryptAsync(decrypted);
 
             // Assert
             Assert.AreEqual(result, encrypted);

@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Decryptor.Utilities
 {
@@ -24,16 +25,6 @@ namespace Decryptor.Utilities
         private readonly int _memorySize;
         private readonly int _saltLength;
         private readonly int _hashLength;
-
-        //public HashManager(HashAlgorithm algorithm)
-        //{
-        //    _algorithm = algorithm;
-
-        //    _workFactor = Properties.Settings.Default.WorkFactor;
-        //    _degreesOfParallelism = Properties.Settings.Default.DegreesOfParallelism;
-        //    _iterations = Properties.Settings.Default.Iterations;
-        //    _memorySize = Properties.Settings.Default.MemorySize;
-        //}
 
         public HashManager(HashAlgorithm algorithm, int workFactor, int scryptIterations, int blockCount,
                            int threadCount, int degrees, int argon2Iterations, int memorySize, int saltLength,
@@ -65,14 +56,14 @@ namespace Decryptor.Utilities
                                    Properties.Settings.Default.Argon2HashLength);
         }
 
-        public string GetHash(string input)
+        public async Task<string> GetHashAsync(string input)
         {
             return _algorithm switch
             {
-                HashAlgorithm.BCrypt => GetBCryptHash(input),
+                HashAlgorithm.BCrypt => await GetBCryptHashAsync(input),
                 HashAlgorithm.None => throw new NotImplementedException(),
-                HashAlgorithm.Scrypt => GetScryptHash(input),
-                HashAlgorithm.Argon2 => GetArgon2Hash(input),
+                HashAlgorithm.Scrypt => await GetScryptHashAsync(input),
+                HashAlgorithm.Argon2 => await GetArgon2HashAsync(input),
                 HashAlgorithm.MD5 => throw new NotImplementedException(),
                 HashAlgorithm.SHA1 => throw new NotImplementedException(),
                 HashAlgorithm.SHA256 => throw new NotImplementedException(),
@@ -81,14 +72,14 @@ namespace Decryptor.Utilities
             };
         }
 
-        public bool CheckHash(string clearText, string hash)
+        public async Task<bool> CheckHashAsync(string clearText, string hash)
         {
             return _algorithm switch
             {
-                HashAlgorithm.BCrypt => CheckBCryptHash(clearText, hash),
+                HashAlgorithm.BCrypt => await CheckBCryptHashAsync(clearText, hash),
                 HashAlgorithm.None => throw new NotImplementedException(),
-                HashAlgorithm.Scrypt => CheckScryptHash(clearText, hash),
-                HashAlgorithm.Argon2 => CheckArgon2Hash(clearText, hash),
+                HashAlgorithm.Scrypt => await CheckScryptHashAsync(clearText, hash),
+                HashAlgorithm.Argon2 => await CheckArgon2HashAsync(clearText, hash),
                 HashAlgorithm.MD5 => throw new NotImplementedException(),
                 HashAlgorithm.SHA1 => throw new NotImplementedException(),
                 HashAlgorithm.SHA256 => throw new NotImplementedException(),
@@ -97,40 +88,40 @@ namespace Decryptor.Utilities
             };
         }
 
-        private string GetBCryptHash(string input)
+        private Task<string> GetBCryptHashAsync(string clearText)
         {
             string salt = BCryptHelper.GenerateSalt(_workFactor);
-            return BCryptHelper.HashPassword(input, salt);
+            return Task.Run(() => BCryptHelper.HashPassword(clearText, salt));
         }
 
-        private bool CheckBCryptHash(string clearText, string hash)
+        private Task<bool> CheckBCryptHashAsync(string clearText, string hash)
         {
             try
             {
-                return BCryptHelper.CheckPassword(clearText, hash);
+                return Task.Run(() => BCryptHelper.CheckPassword(clearText, hash));
             }
             catch (ArgumentException)
             {
-                return false;
+                return Task.FromResult(false);
             }
         }
 
-        private string GetScryptHash(string input)
+        private Task<string> GetScryptHashAsync(string input)
         {
             ScryptEncoder encoder = new ScryptEncoder(_scryptIterations, _blockCount, _threadCount);
-            return encoder.Encode(input);
+            return Task.Run(() => encoder.Encode(input));
         }
 
-        private bool CheckScryptHash(string clearText, string hash)
+        private Task<bool> CheckScryptHashAsync(string clearText, string hash)
         {
             ScryptEncoder encoder = new ScryptEncoder(_scryptIterations, _blockCount, _threadCount);
             try
             {
-                return encoder.Compare(clearText, hash);
+                return Task.Run(() => encoder.Compare(clearText, hash));
             }
             catch (ArgumentException)
             {
-                return false;
+                return Task.FromResult(false);
             }
         }
 
@@ -147,12 +138,12 @@ namespace Decryptor.Utilities
             return buffer;
         }
 
-        private string GetArgon2Hash(string input)
+        private async Task<string> GetArgon2HashAsync(string input)
         {
-            return GetArgon2Hash(input, CreateArgon2Salt(), _degreesOfParallelism, _argon2Iterations, _memorySize, _hashLength);
+            return await GetArgon2Hash(input, CreateArgon2Salt(), _degreesOfParallelism, _argon2Iterations, _memorySize, _hashLength);
         }
 
-        private string GetArgon2Hash(string input, byte[] salt, int degreesOfParallelism, int iterations, int memorySize, int hashLength)
+        private async Task<string> GetArgon2Hash(string input, byte[] salt, int degreesOfParallelism, int iterations, int memorySize, int hashLength)
         {
             var argon2 = new Argon2id(Encoding.UTF8.GetBytes(input))
             {
@@ -163,12 +154,13 @@ namespace Decryptor.Utilities
             };
 
             string saltString = Convert.ToBase64String(argon2.Salt);
-            string hashString = Convert.ToBase64String(argon2.GetBytes(hashLength));
+            byte[] hash = await argon2.GetBytesAsync(hashLength);
+            string hashString = Convert.ToBase64String(hash);
 
             return $"$a2${degreesOfParallelism}${iterations}${memorySize}${salt.Length}${hashLength}${saltString}${hashString}";
         }
 
-        private bool CheckArgon2Hash(string clearText, string hash)
+        private async Task<bool> CheckArgon2HashAsync(string clearText, string hash)
         {
             var split = hash.Split("$");
 
@@ -190,7 +182,7 @@ namespace Decryptor.Utilities
                 saltL >= 16 && saltL <= 1024 &&
                 hashL >= 16 && saltL <= 1024)
             {
-                var newHash = GetArgon2Hash(clearText, Convert.FromBase64String(split[7]), deg, it, mem, hashL);
+                var newHash = await GetArgon2Hash(clearText, Convert.FromBase64String(split[7]), deg, it, mem, hashL);
                 return newHash == hash;
             }
             return false;

@@ -31,10 +31,10 @@ namespace Decryptor.ViewModel.Commands
             return VM.Password != null && VM.Password.Length > 0;
         }
 
-        public void Execute(object parameter)
+        public async void Execute(object parameter)
         {
             var hm = HashManager.NewHashManager(VM.HashAlgorithm);
-            VM.Result = hm.GetHash(VM.Password.ToInsecureString());
+            VM.Result = await hm.GetHashAsync(VM.Password.ToInsecureString());
         }
     }
 }
