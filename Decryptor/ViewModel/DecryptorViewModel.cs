@@ -24,6 +24,8 @@ namespace Decryptor.ViewModel
         private int _degreesOfParallelism;
         private int _argon2Iterations;
         private int _memorySize;
+        private int _argon2SaltLength;
+        private int _argon2HashLength;
         private bool? _checkSucceeded = null;
 
         public SecureString Key
@@ -144,6 +146,24 @@ namespace Decryptor.ViewModel
                 NotifyPropertyChanged();
             }
         }
+        public int Argon2HashLength
+        {
+            get => _argon2HashLength;
+            set
+            {
+                _argon2HashLength = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public int Argon2SaltLength
+        {
+            get => _argon2SaltLength;
+            set
+            {
+                _argon2SaltLength = value;
+                NotifyPropertyChanged();
+            }
+        }
         #endregion
 
         #region Commands
@@ -190,6 +210,8 @@ namespace Decryptor.ViewModel
             DegreesOfParallelism = Properties.Settings.Default.Argon2DegreesOfParallelism;
             Argon2Iterations = Properties.Settings.Default.Argon2Iterations;
             MemorySize = Properties.Settings.Default.Argon2MemorySize;
+            Argon2SaltLength = Properties.Settings.Default.Argon2SaltLength;
+            Argon2HashLength = Properties.Settings.Default.Argon2HashLength;
 
             DecryptCommand.RaiseCanExecuteChanged();
             EncryptCommand.RaiseCanExecuteChanged();
@@ -206,6 +228,8 @@ namespace Decryptor.ViewModel
             Properties.Settings.Default.Argon2DegreesOfParallelism = DegreesOfParallelism;
             Properties.Settings.Default.Argon2Iterations = Argon2Iterations;
             Properties.Settings.Default.Argon2MemorySize = MemorySize;
+            Properties.Settings.Default.Argon2SaltLength = Argon2SaltLength;
+            Properties.Settings.Default.Argon2HashLength = Argon2HashLength;
             Properties.Settings.Default.Save();
 
             DecryptCommand.RaiseCanExecuteChanged();

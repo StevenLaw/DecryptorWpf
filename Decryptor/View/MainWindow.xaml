@@ -52,27 +52,21 @@
                           Click="MenuItem_Click"/>
                 <MenuItem x:Name="miArgon2" 
                           Header="Argon2"
-                          IsCheckable="True"
-                          IsEnabled="False"
                           Click="MenuItem_Click"/>
                 <MenuItem x:Name="miMD5"
                           Header="MD5"
-                          IsCheckable="True"
                           IsEnabled="False"
                           Click="MenuItem_Click"/>
                 <MenuItem x:Name="miSHA1" 
                           Header="SHA1"
-                          IsCheckable="True"
                           IsEnabled="False"
                           Click="MenuItem_Click"/>
                 <MenuItem x:Name="miSHA256"
                           Header="SHA256"
-                          IsCheckable="True"
                           IsEnabled="False"
                           Click="MenuItem_Click"/>
                 <MenuItem x:Name="miSHA512"
                           Header="SHA512"
-                          IsCheckable="True"
                           IsEnabled="False"
                           Click="MenuItem_Click"/>
             </MenuItem>

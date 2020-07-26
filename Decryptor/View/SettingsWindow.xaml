@@ -84,6 +84,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
                 <TextBlock Text="Degrees of Parallelism"/>
@@ -97,10 +98,26 @@
                                    Grid.Column="3"/>
 
                 <TextBlock Text="Memory Size" Grid.Row="1"/>
-                <xcd:IntegerUpDown Minimum="1" 
+                <xcd:IntegerUpDown Minimum="4" 
                                    Value="{Binding MemorySize}" 
                                    Grid.Column="1" 
                                    Grid.Row="1"/>
+
+                <TextBlock Text="Salt Length" 
+                           Grid.Column="2" 
+                           Grid.Row="1"/>
+                <xcd:IntegerUpDown Minimum="16"
+                                   Maximum="1024"
+                                   Value="{Binding Argon2SaltLength}"
+                                   Grid.Column="3"
+                                   Grid.Row="1"/>
+
+                <TextBlock Text="Hash Length" Grid.Row="2"/>
+                <xcd:IntegerUpDown Minimum="16"
+                                   Maximum="1024"
+                                   Value="{Binding Argon2HashLength}"
+                                   Grid.Column="1"
+                                   Grid.Row="2"/>
             </Grid>
         </GroupBox>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

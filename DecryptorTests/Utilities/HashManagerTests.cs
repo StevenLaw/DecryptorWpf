@@ -1,10 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Decryptor.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Interop;
-using System.Diagnostics;
 
 namespace Decryptor.Utilities.Tests
 {
@@ -19,10 +14,13 @@ namespace Decryptor.Utilities.Tests
         private const int degrees = 8;
         private const int argonIterations = 4;
         private const int memorySpace = 1048576;
+        private const int saltLength = 16;
+        private const int hashLength = 16;
 
         private HashManager GetHashManager(HashAlgorithm algorithm)
         {
-            return new HashManager(algorithm, workFactor, scryptIterations, blockSize, threadCount, degrees, argonIterations, memorySpace);
+            return new HashManager(algorithm, workFactor, scryptIterations, blockSize, threadCount, degrees,
+                                   argonIterations, memorySpace, saltLength, hashLength);
         }
 
         [TestMethod()]
@@ -136,7 +134,6 @@ namespace Decryptor.Utilities.Tests
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public void Argon2GetHashTest()
         {
             // Arrange
@@ -146,41 +143,38 @@ namespace Decryptor.Utilities.Tests
             string hash = hm.GetHash(sample);
 
             // Assert
-            //Assert.IsTrue(hash.Length > 0);
+            Assert.IsTrue(hash.Length > 0);
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public void Argon2CheckHashTest()
         {
             // Arrange
             var hm = GetHashManager(HashAlgorithm.Argon2);
-            string hash = "$2a$12$0W3HDzb4kSDKs4dUagmEzeVzFVQfR.IQga3NJn5lK5jwdeRUI.jZO";
+            string hash = "$a2$8$4$1048576$16$16$/X7A9uODAMLIU/lAIKlZ2A==$1QUD0xdIdp9cMqXxOvO6bw==";
 
             // Act
             bool matches = hm.CheckHash(sample, hash);
 
             // Assert
-            //Assert.IsTrue(matches);
+            Assert.IsTrue(matches);
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public void Argon2CheckHashFailTest()
         {
             // Arrange
             var hm = GetHashManager(HashAlgorithm.Argon2);
-            string failHash = "$2a$12$mnoK5//Ad5pFy1XnpLY1aeaN43B/7AtPaTIlbQujVNzY6x09P.ceG";
+            string failHash = "$a2$8$4$1048576$16$16$rasN2h23lI2QHIo0ATikPQ==$l6ATQJOCSRUyoH2Q8AVbDw==";
 
             // Act
             bool matches = hm.CheckHash(sample, failHash);
 
             // Assert
-            //Assert.IsFalse(matches);
+            Assert.IsFalse(matches);
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
         public void Argon2GetAndCheckHashTest()
         {
             // Arrange
@@ -191,7 +185,7 @@ namespace Decryptor.Utilities.Tests
             bool matches = hm.CheckHash(sample, hash);
 
             // Assert
-            //Assert.IsTrue(matches);
+            Assert.IsTrue(matches);
         }
 
         [TestMethod()]

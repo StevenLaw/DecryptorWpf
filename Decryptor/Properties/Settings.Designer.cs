@@ -130,5 +130,29 @@ namespace Decryptor.Properties {
                 this["ScryptThreadCount"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        public int Argon2HashLength {
+            get {
+                return ((int)(this["Argon2HashLength"]));
+            }
+            set {
+                this["Argon2HashLength"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        public int Argon2SaltLength {
+            get {
+                return ((int)(this["Argon2SaltLength"]));
+            }
+            set {
+                this["Argon2SaltLength"] = value;
+            }
+        }
     }
 }
