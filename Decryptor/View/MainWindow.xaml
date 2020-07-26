@@ -87,6 +87,9 @@
             <StatusBarItem>
                 <uc:SuccessIndicator Success="{Binding CheckSucceeded}"/>
             </StatusBarItem>
+            <StatusBarItem>
+                <uc:Spinner IsSpinning="{Binding IsBusy}"/>
+            </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Stretch"
                            HorizontalContentAlignment="Stretch">
                 <TextBlock Text="{Binding Result, Mode=TwoWay}" 

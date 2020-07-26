@@ -36,8 +36,10 @@ namespace Decryptor.ViewModel.Commands
             SimpleAes aes = new SimpleAes(VM.Key);
             try
             {
+                VM.IsBusy = true;
                 VM.Result = await aes.DecryptAsync(VM.Text);
                 VM.CheckSucceeded = null;
+                VM.IsBusy = false;
             }
             catch (Exception)
             {

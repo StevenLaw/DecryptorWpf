@@ -1,11 +1,8 @@
 ﻿using Decryptor.Utilities;
 using Decryptor.ViewModel.Commands;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Security;
-using System.Text;
 
 namespace Decryptor.ViewModel
 {
@@ -27,6 +24,7 @@ namespace Decryptor.ViewModel
         private int _argon2SaltLength;
         private int _argon2HashLength;
         private bool? _checkSucceeded = null;
+        private bool _isBusy = false;
 
         public SecureString Key
         {
@@ -161,6 +159,15 @@ namespace Decryptor.ViewModel
             set
             {
                 _argon2SaltLength = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set
+            {
+                _isBusy = value;
                 NotifyPropertyChanged();
             }
         }
