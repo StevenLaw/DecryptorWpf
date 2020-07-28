@@ -88,7 +88,7 @@
                 <uc:SuccessIndicator Success="{Binding CheckSucceeded}"/>
             </StatusBarItem>
             <StatusBarItem>
-                <uc:Spinner IsSpinning="{Binding IsBusy}"/>
+                <uc:Spinner Width="16" Height="16" IsSpinning="{Binding IsBusy}"/>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Stretch"
                            HorizontalContentAlignment="Stretch">

@@ -6,10 +6,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:local="clr-namespace:Decryptor.UserControls"
-             mc:Ignorable="d" 
-             Height="24" Width="24">
+             mc:Ignorable="d">
     <fa:ImageAwesome Icon="Spinner"
                      Spin="True" 
                      SpinDuration="3" 
+                     Width="{Binding ActualWidth, ElementName=spinner}"
+                     Height="{Binding ActualHeight, ElementName=spinner}"
                      Foreground="DodgerBlue"/>
 </UserControl>
