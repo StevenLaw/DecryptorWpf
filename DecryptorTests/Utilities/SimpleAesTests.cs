@@ -8,7 +8,7 @@ namespace Decryptor.Utilities.Tests
     [TestClass()]
     public class SimpleAesTests
     {
-        private SecureString key;
+        private readonly SecureString key;
         private const string insecureKey = "This is an insecure key for testing";
         private const string sample = "This is a sample for encrypting";
         private const string result = "/u7rOUO9GCXJGN269dag0QU26yR4WJkLPvcLjcWoxYc=";

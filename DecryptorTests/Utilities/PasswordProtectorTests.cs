@@ -12,7 +12,7 @@ namespace Decryptor.Utilities.Tests
     public class PasswordProtectorTests
     {
         private const string sample = "This is a sample string to encrypt/secure";
-        private SecureString secureSample;
+        private readonly SecureString secureSample;
 
         public PasswordProtectorTests()
         {

@@ -18,7 +18,7 @@ namespace Decryptor.Utilities.Tests
         private const int saltLength = 16;
         private const int hashLength = 16;
 
-        private HashManager GetHashManager(HashAlgorithm algorithm)
+        private static HashManager GetHashManager(HashAlgorithm algorithm)
         {
             return new HashManager(algorithm, workFactor, scryptIterations, blockSize, threadCount, degrees,
                                    argonIterations, memorySpace, saltLength, hashLength);
@@ -309,7 +309,7 @@ namespace Decryptor.Utilities.Tests
             string hash = await hm.GetHashAsync(sample);
 
             // Assert
-            ////Assert.IsTrue(hash.Length > 0);
+            Assert.IsTrue(hash.Length > 0);
         }
 
         [TestMethod()]

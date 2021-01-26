@@ -11,6 +11,12 @@ namespace Decryptor.Utilities
     {
         private const int keySize = 32;
         private const int IVSize = 16;
+        private readonly byte[] salt = new byte[]
+        {
+            0x49, 0x76, 0x61, 0x6E, 0x20,
+            0x4D, 0x65, 0x64, 0x76, 0x65,
+            0x64, 0x65, 0x76
+        };
 
         private readonly SecureString encryptionKey;
 
@@ -35,19 +41,14 @@ namespace Decryptor.Utilities
             byte[] clearBytes = Encoding.UTF8.GetBytes(clearText);
             using Aes aes = Aes.Create();
             var pdb = new Rfc2898DeriveBytes(encryptionKey.ToInsecureString(),
-                                             new byte[]
-                                             {
-                                                     0x49, 0x76, 0x61, 0x6E, 0x20,
-                                                     0x4D, 0x65, 0x64, 0x76, 0x65,
-                                                     0x64, 0x65, 0x76
-                                             });
+                                             salt);
             aes.Key = pdb.GetBytes(keySize);
             aes.IV = pdb.GetBytes(IVSize);
             using var ms = new MemoryStream();
             using var cs = new CryptoStream(ms,
                                              aes.CreateEncryptor(),
                                              CryptoStreamMode.Write);
-            await cs.WriteAsync(clearBytes, 0, clearBytes.Length);
+            await cs.WriteAsync(clearBytes.AsMemory(0, clearBytes.Length));
             cs.Close();
             return Convert.ToBase64String(ms.ToArray());
         }
@@ -64,17 +65,12 @@ namespace Decryptor.Utilities
             byte[] cypherBytes = Convert.FromBase64String(cypherText);
             using Aes aes = Aes.Create();
             var pdb = new Rfc2898DeriveBytes(encryptionKey.ToInsecureString(),
-                                             new byte[]
-                                             {
-                                                     0x49, 0x76, 0x61, 0x6E, 0x20,
-                                                     0x4D, 0x65, 0x64, 0x76, 0x65,
-                                                     0x64, 0x65, 0x76
-                                             });
+                                             salt);
             aes.Key = pdb.GetBytes(keySize);
             aes.IV = pdb.GetBytes(IVSize);
             using var ms = new MemoryStream();
             using var cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Write);
-            await cs.WriteAsync(cypherBytes, 0, cypherBytes.Length);
+            await cs.WriteAsync(cypherBytes.AsMemory(0, cypherBytes.Length));
             cs.Close();
             return Encoding.UTF8.GetString(ms.ToArray());
         }
