@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Decryptor.Utilities.Tests
+namespace Decryptor.Utilities.Encryption.Tests
 {
     [TestClass()]
     public class SimpleAesTests

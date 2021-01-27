@@ -1,4 +1,5 @@
 ﻿using Decryptor.Utilities;
+using Decryptor.Utilities.Encryption;
 using System;
 using System.Windows;
 using System.Windows.Input;

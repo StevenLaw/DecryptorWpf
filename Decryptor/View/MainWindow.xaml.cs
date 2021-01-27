@@ -1,4 +1,4 @@
-﻿using Decryptor.Utilities;
+﻿using Decryptor.Utilities.Hashing;
 using Decryptor.ViewModel;
 using System;
 using System.Windows;

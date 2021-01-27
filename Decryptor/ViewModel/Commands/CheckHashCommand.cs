@@ -1,4 +1,5 @@
 ﻿using Decryptor.Utilities;
+using Decryptor.Utilities.Hashing;
 using System;
 using System.Windows.Input;
 
@@ -31,9 +32,9 @@ namespace Decryptor.ViewModel.Commands
 
         public async void Execute(object parameter)
         {
-            var hm = HashManager.NewHashManager(VM.HashAlgorithm);
+            var hash = HashFactory.Create(VM.HashAlgorithm);
             VM.IsBusy = true;
-            VM.CheckSucceeded = await hm.CheckHashAsync(VM.Password.ToInsecureString(), VM.Text);
+            VM.CheckSucceeded = await hash.CheckHashAsync(VM.Password.ToInsecureString(), VM.Text);
             VM.IsBusy = false;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Decryptor.Utilities;
+using Decryptor.Utilities.Hashing;
 using Decryptor.ViewModel.Commands;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
