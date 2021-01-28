@@ -1,4 +1,5 @@
 ﻿using Decryptor.Utilities;
+using Decryptor.Utilities.Encryption;
 using Decryptor.Utilities.Hashing;
 using Decryptor.ViewModel.Commands;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ namespace Decryptor.ViewModel
         private int _workFactor;
         private SecureString _password;
         private HashAlgorithm _hashAlgorithm;
+        private EncryptionAlgorithm _encryptionAlgorithm;
         private int _scryptIterations;
         private int _blockCount;
         private int _threadCount;
@@ -82,6 +84,17 @@ namespace Decryptor.ViewModel
                 NotifyPropertyChanged();
             }
         }
+
+        public EncryptionAlgorithm EncryptionAlgorithm 
+        { 
+            get => _encryptionAlgorithm; 
+            set 
+            {
+                _encryptionAlgorithm = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public int DegreesOfParallelism
         {
             get => _degreesOfParallelism;
@@ -212,6 +225,7 @@ namespace Decryptor.ViewModel
             Key = PasswordProtector.DecryptString(Properties.Settings.Default.Key);
             WorkFactor = Properties.Settings.Default.BCryptWorkFactor;
             HashAlgorithm = (HashAlgorithm)Properties.Settings.Default.HashAlgorithm;
+            EncryptionAlgorithm = (EncryptionAlgorithm)Properties.Settings.Default.EncryptionAlgorithm;
             ScryptIterations = Properties.Settings.Default.ScryptIterationCount;
             BlockCount = Properties.Settings.Default.ScryptBlockCount;
             ThreadCount = Properties.Settings.Default.ScryptThreadCount;

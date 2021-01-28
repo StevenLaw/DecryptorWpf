@@ -1,9 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Decryptor.Utilities.Encryption;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Decryptor.Utilities.Encryption.Tests
@@ -11,28 +6,44 @@ namespace Decryptor.Utilities.Encryption.Tests
     [TestClass()]
     public class SimpleDesTests
     {
+        private const string sample = "This is a sample";
+
         [TestMethod()]
-        public void SimpleDesTest()
+        public async Task EncryptDecryptExternalKeyTest()
         {
-            Assert.Fail();
+            byte[] key = new byte[] { 0x0b, 0x67, 0x66, 0x1e, 0xb3, 0x5e, 0x96, 0x97 };
+            byte[] iv = new byte[] { 0xee, 0x95, 0xe6, 0xf7, 0x57, 0xf6, 0x1e, 0xbb };
+
+            // Arrange
+            SimpleDes sDes1 = new(key, iv);
+            SimpleDes sDes2 = new(key, iv);
+
+            // Act
+            var crypt1 = await sDes1.EncryptAsync(sample);
+            var crypt2 = await sDes2.EncryptAsync(sample);
+
+            var decrypt1 = await sDes1.DecryptAsync(crypt1);
+            var decrypt2 = await sDes2.DecryptAsync(crypt2);
+
+            // Assert
+            Assert.AreEqual(crypt1, crypt2);
+            Assert.AreEqual(decrypt1, decrypt2);
+            Assert.AreEqual(decrypt1, sample);
+            Assert.AreEqual(decrypt2, sample);
         }
 
         [TestMethod()]
-        public void SimpleDesTest1()
+        public async Task EncryptDecryptTest()
         {
-            Assert.Fail();
-        }
+            // Arrange
+            var sDes = new SimpleDes();
 
-        [TestMethod()]
-        public void DecryptAsyncTest()
-        {
-            Assert.Fail();
-        }
+            // Act
+            var crypt = await sDes.EncryptAsync(sample);
+            var decrypt = await sDes.DecryptAsync(crypt);
 
-        [TestMethod()]
-        public void EncryptAsyncTest()
-        {
-            Assert.Fail();
+            // Assert
+            Assert.AreEqual(decrypt, sample);
         }
     }
 }
