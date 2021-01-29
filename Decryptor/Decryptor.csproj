@@ -8,25 +8,41 @@
     <Authors>Steven Law</Authors>
     <Copyright>Copyright © Steven Law</Copyright>
     <Description>A simple tool for getting encrypted strings or hashes using a variety of algorithms.</Description>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.1.0</AssemblyVersion>
+    <FileVersion>1.1.1.0</FileVersion>
+    <Version>1.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Resources\BlueKey.ico" />
     <None Remove="Resources\iconmonstr-check-mark-14-16.png" />
     <None Remove="Resources\iconmonstr-clipboard-8-16.png" />
+    <None Remove="Resources\iconmonstr-door-8-thick.png" />
     <None Remove="Resources\iconmonstr-eraser-2-16.png" />
+    <None Remove="Resources\iconmonstr-folder-22-16.png" />
+    <None Remove="Resources\iconmonstr-gear-2-16.png" />
+    <None Remove="Resources\iconmonstr-hashtag-1-16.png" />
+    <None Remove="Resources\iconmonstr-help-6-16.png" />
+    <None Remove="Resources\iconmonstr-key-2-16.png" />
+    <None Remove="Resources\iconmonstr-lock-14-16.png" />
     <None Remove="Resources\iconmonstr-x-mark-5-16.png" />
+    <None Remove="Resources\magnifier-check.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\BlueKey.ico" />
     <Resource Include="Resources\iconmonstr-check-mark-14-16.png" />
     <Resource Include="Resources\iconmonstr-clipboard-8-16.png" />
+    <Resource Include="Resources\iconmonstr-door-8-thick.png" />
     <Resource Include="Resources\iconmonstr-eraser-2-16.png" />
+    <Resource Include="Resources\iconmonstr-folder-22-16.png" />
+    <Resource Include="Resources\iconmonstr-gear-2-16.png" />
+    <Resource Include="Resources\iconmonstr-hashtag-1-16.png" />
+    <Resource Include="Resources\iconmonstr-help-6-16.png" />
+    <Resource Include="Resources\iconmonstr-key-2-16.png" />
+    <Resource Include="Resources\iconmonstr-lock-14-16.png" />
     <Resource Include="Resources\iconmonstr-x-mark-5-16.png" />
+    <Resource Include="Resources\magnifier-check.png" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,7 +8,9 @@
         mc:Ignorable="d"
         Title="Decryptor" 
         Height="300"
+        MinHeight="250"
         Width="600" 
+        MinWidth="450"
         Icon="/Resources/BlueKey.ico"
         DataContext="{StaticResource vm}">
     <Window.Resources>
@@ -35,31 +37,71 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_Settings">
                 <MenuItem Header="_Settings"
-                          Command="{StaticResource SettingsCommand_Execute}"/>
+                          Command="{StaticResource SettingsCommand_Execute}">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/iconmonstr-gear-2-16.png" 
+                               Style="{StaticResource disabledImage}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="_Exit"
                           Command="{StaticResource ExitCommand_Execute}"
-                          InputGestureText="Ctrl+Q"/>
+                          InputGestureText="Ctrl+Q">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/iconmonstr-door-8-thick.png" 
+                               Style="{StaticResource disabledImage}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="_Actions">
                 <MenuItem Header="_Copy Output"
                           Command="{Binding CopyCommand}"
-                          InputGestureText="Ctrl+Shift+C"/>
+                          InputGestureText="Ctrl+Shift+C">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/iconmonstr-clipboard-8-16.png"
+                               Style="{StaticResource disabledImage}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="_Clear Output"
                           Command="{Binding ClearCommand}"
-                          InputGestureText="Ctrl+Shift+X"/>
+                          InputGestureText="Ctrl+Shift+X">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/iconmonstr-eraser-2-16.png" 
+                               Style="{StaticResource disabledImage}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
                 <MenuItem Header="_Encrypt"
                           Command="{Binding EncryptCommand}"
-                          InputGestureText="Ctrl+E"/>
+                          InputGestureText="Ctrl+E">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/iconmonstr-key-2-16.png" 
+                               Style="{StaticResource disabledImage}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="_Decrypt"
                           Command="{Binding DecryptCommand}"
-                          InputGestureText="Ctrl+D"/>
+                          InputGestureText="Ctrl+D">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/iconmonstr-lock-14-16.png" 
+                               Style="{StaticResource disabledImage}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="_Hash"
                           Command="{Binding GenerateHashCommand}"
-                          InputGestureText="Ctrl+H"/>
+                          InputGestureText="Ctrl+H">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/iconmonstr-hashtag-1-16.png" 
+                               Style="{StaticResource disabledImage}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="Chec_k"
                           Command="{Binding CheckHashCommand}"
-                          InputGestureText="Ctrl+K"/>
+                          InputGestureText="Ctrl+K">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/magnifier-check.png" 
+                               Style="{StaticResource disabledImage}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="_Encryption Algorithm">
                 <MenuItem x:Name="miAes"
@@ -94,7 +136,13 @@
             </MenuItem>
             <MenuItem Header="Hel_p">
                 <MenuItem Header="_About"
-                          Command="{StaticResource AboutCommand_Execute}"/>
+                          Command="{StaticResource AboutCommand_Execute}">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/iconmonstr-help-6-16.png" 
+                               Style="{StaticResource disabledImage}"/>
+
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <StatusBar DockPanel.Dock="Bottom" 
@@ -128,62 +176,80 @@
             </StatusBarItem>
 
         </StatusBar>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
+        <TabControl>
+            <TabItem Header="Text">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
 
-            <TextBox Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                     Style="{StaticResource multiLine}" 
-                     Grid.ColumnSpan="4"/>
+                    <TextBox Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             Style="{StaticResource multiLine}" 
+                             Grid.ColumnSpan="4"/>
 
-            <TextBlock Text="Password"
-                       Grid.Column="0"
-                       Grid.Row="1"/>
-            <!--<PasswordBox x:Name="password" 
-                         Grid.Column="1" 
-                         Grid.Row="1" LostFocus="Password_LostFocus" KeyUp="Password_KeyUp"/>
-            <TextBox x:Name="passwordVisible"
-                     Visibility="Collapsed"
-                     Grid.Row="1"
-                     Grid.Column="1"/>-->
-            <uc:ViewablePasswordBox x:Name="password"
-                                    Password="{Binding Password}"
-                                    PasswordLength="{Binding PasswordLength, 
-                                        Mode=OneWayToSource, 
-                                        UpdateSourceTrigger=PropertyChanged}"
-                                    Grid.Column="1" 
-                                    Grid.Row="1"/>
-            <Button Content="_Encrypt" 
-                    Command="{Binding EncryptCommand}"
-                    Grid.Column="2" 
-                    Grid.Row="1"/>
-            <Button Content="_Decrypt" 
-                    Command="{Binding DecryptCommand}"
-                    Grid.Column="3" 
-                    Grid.Row="1"/>
+                    <TextBlock Text="Password"
+                               Grid.Column="0"
+                               Grid.Row="1"/>
+                    <uc:ViewablePasswordBox x:Name="password"
+                                            Password="{Binding Password}"
+                                            PasswordLength="{Binding PasswordLength, 
+                                                Mode=OneWayToSource, 
+                                                UpdateSourceTrigger=PropertyChanged}"
+                                            Grid.Column="1" 
+                                            Grid.Row="1"/>
+                    <Button Content="_Encrypt" 
+                            Command="{Binding EncryptCommand}"
+                            Grid.Column="2" 
+                            Grid.Row="1"/>
+                    <Button Content="_Decrypt" 
+                            Command="{Binding DecryptCommand}"
+                            Grid.Column="3" 
+                            Grid.Row="1"/>
 
-            <CheckBox Content="Show Password" 
-                      Grid.ColumnSpan="2" 
-                      Grid.Row="2" 
-                      Click="CheckBox_Click"/>
-            <Button Content="_Hash" 
-                    Command="{Binding GenerateHashCommand}"
-                    Grid.Column="2" 
-                    Grid.Row="2"/>
-            <Button Content="Chec_k" 
-                    Command="{Binding CheckHashCommand}"
-                    Grid.Column="3" 
-                    Grid.Row="2"/>
+                    <CheckBox Content="Show Password" 
+                              Grid.ColumnSpan="2" 
+                              Grid.Row="2" 
+                              Click="CheckBox_Click"/>
+                    <Button Content="_Hash" 
+                            Command="{Binding GenerateHashCommand}"
+                            Grid.Column="2" 
+                            Grid.Row="2"/>
+                    <Button Content="Chec_k" 
+                            Command="{Binding CheckHashCommand}"
+                            Grid.Column="3" 
+                            Grid.Row="2"/>
 
-        </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="File">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Input File"/>
+                    <TextBox Grid.Column="1"/>
+                    <Button Grid.Column="2"
+                            Padding="3">
+                        <Image Source="/Resources/iconmonstr-folder-22-16.png"
+                               Style="{StaticResource disabledImage}"
+                               Stretch="None"/>
+                    </Button>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </DockPanel>
 </Window>
