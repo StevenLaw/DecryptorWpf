@@ -1,4 +1,5 @@
-﻿using Decryptor.Utilities.Hashing;
+﻿using Decryptor.Utilities.Encryption;
+using Decryptor.Utilities.Hashing;
 using Decryptor.ViewModel;
 using System;
 using System.Windows;
@@ -18,7 +19,8 @@ namespace Decryptor.View
         {
             InitializeComponent();
             vm = DataContext as DecryptorViewModel;
-            SetCheck();
+            SetCheckEnc();
+            SetCheckHash();
         }
 
         private void ExitCommand_Execute(object sender, ExecutedRoutedEventArgs e)
@@ -39,7 +41,30 @@ namespace Decryptor.View
             (new SettingsWindow()).ShowDialog();
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void EncMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && ! menuItem.IsChecked)
+            {
+                if (Enum.TryParse(menuItem.Header.ToString(), out EncryptionAlgorithm algo))
+                {
+                    vm.EncryptionAlgorithm = algo;
+                    Properties.Settings.Default.EncryptionAlgorithm = (byte)algo;
+                    Properties.Settings.Default.Save();
+                }
+            }
+            SetCheckEnc();
+        }
+
+        private void SetCheckEnc()
+        {
+            var algorithm = vm.EncryptionAlgorithm;
+            if (algorithm == EncryptionAlgorithm.AES) miAes.IsChecked = true;
+            else miAes.IsChecked = false;
+            if (algorithm == EncryptionAlgorithm.DES) miDes.IsChecked = true;
+            else miDes.IsChecked = false;
+        }
+
+        private void HashMenuItem_Click(object sender, RoutedEventArgs e)
         {
             // If the sender is already checked then ignore it
             if (sender is MenuItem menuItem && !menuItem.IsChecked)
@@ -51,10 +76,10 @@ namespace Decryptor.View
                     Properties.Settings.Default.Save();
                 }
             }
-            SetCheck();
+            SetCheckHash();
         }
 
-        private void SetCheck()
+        private void SetCheckHash()
         {
             var algorithm = vm.HashAlgorithm;
             if (algorithm == HashAlgorithm.Argon2) miArgon2.IsChecked = true;

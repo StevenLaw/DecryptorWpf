@@ -24,6 +24,7 @@
     <Window.InputBindings>
         <KeyBinding Command="{StaticResource ExitCommand_Execute}" Key="Q" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding CopyCommand}" Key="C" Modifiers="Ctrl+Shift"/>
+        <KeyBinding Command="{Binding ClearCommand}" Key="X" Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding EncryptCommand}" Key="E" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding DecryptCommand}" Key="D" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding GenerateHashCommand}" Key="H" Modifiers="Ctrl"/>
@@ -35,10 +36,6 @@
             <MenuItem Header="_Settings">
                 <MenuItem Header="_Settings"
                           Command="{StaticResource SettingsCommand_Execute}"/>
-                <MenuItem Header="_Copy Result"
-                          Command="{Binding CopyCommand}"/>
-                <MenuItem Header="C_lear Result"
-                          Command="{Binding ClearCommand}"/>
                 <MenuItem Header="_Exit"
                           Command="{StaticResource ExitCommand_Execute}"
                           InputGestureText="Ctrl+Q"/>
@@ -47,6 +44,9 @@
                 <MenuItem Header="_Copy Output"
                           Command="{Binding CopyCommand}"
                           InputGestureText="Ctrl+Shift+C"/>
+                <MenuItem Header="_Clear Output"
+                          Command="{Binding ClearCommand}"
+                          InputGestureText="Ctrl+Shift+X"/>
                 <Separator/>
                 <MenuItem Header="_Encrypt"
                           Command="{Binding EncryptCommand}"
@@ -61,30 +61,38 @@
                           Command="{Binding CheckHashCommand}"
                           InputGestureText="Ctrl+K"/>
             </MenuItem>
-            <MenuItem Header="Hash _Algorithm">
+            <MenuItem Header="_Encryption Algorithm">
+                <MenuItem x:Name="miAes"
+                          Header="AES"
+                          Click="EncMenuItem_Click"/>
+                <MenuItem x:Name="miDes"
+                          Header="DES"
+                          Click="EncMenuItem_Click"/>
+            </MenuItem>
+            <MenuItem Header="_Hash Algorithm">
                 <MenuItem x:Name="miBCrypt" 
                           Header="BCrypt"
-                          Click="MenuItem_Click"/>
+                          Click="HashMenuItem_Click"/>
                 <MenuItem x:Name="miScrypt"
                           Header="Scrypt"
-                          Click="MenuItem_Click"/>
+                          Click="HashMenuItem_Click"/>
                 <MenuItem x:Name="miArgon2" 
                           Header="Argon2"
-                          Click="MenuItem_Click"/>
+                          Click="HashMenuItem_Click"/>
                 <MenuItem x:Name="miMD5"
                           Header="MD5"
-                          Click="MenuItem_Click"/>
+                          Click="HashMenuItem_Click"/>
                 <MenuItem x:Name="miSHA1" 
                           Header="SHA1"
-                          Click="MenuItem_Click"/>
+                          Click="HashMenuItem_Click"/>
                 <MenuItem x:Name="miSHA256"
                           Header="SHA256"
-                          Click="MenuItem_Click"/>
+                          Click="HashMenuItem_Click"/>
                 <MenuItem x:Name="miSHA512"
                           Header="SHA512"
-                          Click="MenuItem_Click"/>
+                          Click="HashMenuItem_Click"/>
             </MenuItem>
-            <MenuItem Header="_Help">
+            <MenuItem Header="Hel_p">
                 <MenuItem Header="_About"
                           Command="{StaticResource AboutCommand_Execute}"/>
             </MenuItem>

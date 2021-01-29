@@ -26,12 +26,11 @@ namespace Decryptor.Utilities.Encryption.Tests
         [TestMethod()]
         public async Task EncryptTest()
         {
-            // Arange
+            // Arrange
             var aes = new SimpleAes(key);
 
             // Act
             string encrypted = await aes.EncryptAsync(sample);
-            Debug.WriteLine(encrypted);
 
             // Assert
             Assert.AreEqual(result, encrypted);
@@ -40,7 +39,7 @@ namespace Decryptor.Utilities.Encryption.Tests
         [TestMethod()]
         public async Task DecryptTest()
         {
-            // Arange
+            // Arrange
             var aes = new SimpleAes(key);
 
             // Act
@@ -53,7 +52,7 @@ namespace Decryptor.Utilities.Encryption.Tests
         [TestMethod]
         public async Task EncryptDecryptTest()
         {
-            // Arange
+            // Arrange
             var aes = new SimpleAes(key);
 
             // Act

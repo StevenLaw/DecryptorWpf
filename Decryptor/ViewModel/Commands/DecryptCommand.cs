@@ -38,8 +38,6 @@ namespace Decryptor.ViewModel.Commands
             {
                 VM.IsBusy = true;
                 VM.Result = await encryption.DecryptAsync(VM.Text);
-                VM.CheckSucceeded = null;
-                VM.IsBusy = false;
             }
             catch (Exception)
             {
@@ -48,6 +46,11 @@ namespace Decryptor.ViewModel.Commands
                                 "Wrong Key",
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Error);
+            }
+            finally
+            {
+                VM.CheckSucceeded = null;
+                VM.IsBusy = false;
             }
         }
 

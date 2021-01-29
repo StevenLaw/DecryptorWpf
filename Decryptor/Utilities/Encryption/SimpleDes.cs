@@ -1,8 +1,6 @@
 ﻿using Decryptor.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,28 +10,29 @@ namespace Decryptor.Utilities.Encryption
 {
     public class SimpleDes : ISimpleEncryption
     {
-        private readonly byte[] key;
-        private readonly byte[] iv;
+        private const int keyIVSize = 8;
+        private readonly SecureString encryptionKey = null;
 
-        public SimpleDes()
+        private readonly byte[] salt = new byte[]
         {
-            using DES des = DES.Create();
-            key = des.Key;
-            iv = des.IV;
-        }
+            0xc2, 0xdd, 0x5c, 0xe8, 0x4a,
+            0x8d, 0x08, 0x52, 0xbf, 0x8e,
+            0x82, 0x2f, 0xeb
+        };
 
-        public SimpleDes(byte[] key, byte[] iv)
+        public SimpleDes(SecureString key)
         {
-            this.key = key;
-            this.iv = iv;
+            encryptionKey = key;
         }
 
         public async Task<string> DecryptAsync(string cypherText)
         {
             byte[] cypherBytes = Convert.FromBase64String(cypherText);
             using DES des = DES.Create();
-            des.Key = key;
-            des.IV = iv;
+            var pdb = new Rfc2898DeriveBytes(encryptionKey.ToInsecureString(),
+                                                salt);
+            des.Key = pdb.GetBytes(keyIVSize);
+            des.IV = pdb.GetBytes(keyIVSize);
             using var ms = new MemoryStream(cypherBytes);
             using var cs = new CryptoStream(ms,
                                             des.CreateDecryptor(),
@@ -48,8 +47,10 @@ namespace Decryptor.Utilities.Encryption
         {
             byte[] clearBytes = Encoding.UTF8.GetBytes(clearText);
             using DES des = DES.Create();
-            des.Key = key;
-            des.IV = iv;
+            var pdb = new Rfc2898DeriveBytes(encryptionKey.ToInsecureString(),
+                                                salt);
+            des.Key = pdb.GetBytes(keyIVSize);
+            des.IV = pdb.GetBytes(keyIVSize);
             using var ms = new MemoryStream();
             using var cs = new CryptoStream(ms,
                                             des.CreateEncryptor(),
