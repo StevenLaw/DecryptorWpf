@@ -27,7 +27,7 @@ namespace Decryptor.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            return VM.Password != null && VM.Password.Length > 0 && !string.IsNullOrEmpty(VM.Text);
+            return VM.PasswordLength > 0 && !string.IsNullOrEmpty(VM.Text);
         }
 
         public async void Execute(object parameter)

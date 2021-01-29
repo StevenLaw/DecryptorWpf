@@ -33,11 +33,11 @@ namespace Decryptor.ViewModel.Commands
 
         public async void Execute(object parameter)
         {
-            SimpleAes aes = new SimpleAes(VM.Key);
+            var encryption = EncryptionFactory.Create(VM.EncryptionAlgorithm);
             try
             {
                 VM.IsBusy = true;
-                VM.Result = await aes.DecryptAsync(VM.Text);
+                VM.Result = await encryption.DecryptAsync(VM.Text);
                 VM.CheckSucceeded = null;
                 VM.IsBusy = false;
             }

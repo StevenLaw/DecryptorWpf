@@ -23,6 +23,11 @@
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Command="{StaticResource ExitCommand_Execute}" Key="Q" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding CopyCommand}" Key="C" Modifiers="Ctrl+Shift"/>
+        <KeyBinding Command="{Binding EncryptCommand}" Key="E" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding DecryptCommand}" Key="D" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding GenerateHashCommand}" Key="H" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding CheckHashCommand}" Key="K" Modifiers="Ctrl"/>
     </Window.InputBindings>
     
     <DockPanel>
@@ -37,6 +42,24 @@
                 <MenuItem Header="_Exit"
                           Command="{StaticResource ExitCommand_Execute}"
                           InputGestureText="Ctrl+Q"/>
+            </MenuItem>
+            <MenuItem Header="_Actions">
+                <MenuItem Header="_Copy Output"
+                          Command="{Binding CopyCommand}"
+                          InputGestureText="Ctrl+Shift+C"/>
+                <Separator/>
+                <MenuItem Header="_Encrypt"
+                          Command="{Binding EncryptCommand}"
+                          InputGestureText="Ctrl+E"/>
+                <MenuItem Header="_Decrypt"
+                          Command="{Binding DecryptCommand}"
+                          InputGestureText="Ctrl+D"/>
+                <MenuItem Header="_Hash"
+                          Command="{Binding GenerateHashCommand}"
+                          InputGestureText="Ctrl+H"/>
+                <MenuItem Header="Chec_k"
+                          Command="{Binding CheckHashCommand}"
+                          InputGestureText="Ctrl+K"/>
             </MenuItem>
             <MenuItem Header="Hash _Algorithm">
                 <MenuItem x:Name="miBCrypt" 
@@ -110,8 +133,8 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
-            <TextBox Text="{Binding Text, Mode=TwoWay}" 
-                     Style="{StaticResource multiLine}"
+            <TextBox Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                     Style="{StaticResource multiLine}" 
                      Grid.ColumnSpan="4"/>
 
             <TextBlock Text="Password"
@@ -126,6 +149,9 @@
                      Grid.Column="1"/>-->
             <uc:ViewablePasswordBox x:Name="password"
                                     Password="{Binding Password}"
+                                    PasswordLength="{Binding PasswordLength, 
+                                        Mode=OneWayToSource, 
+                                        UpdateSourceTrigger=PropertyChanged}"
                                     Grid.Column="1" 
                                     Grid.Row="1"/>
             <Button Content="_Encrypt" 
@@ -145,7 +171,7 @@
                     Command="{Binding GenerateHashCommand}"
                     Grid.Column="2" 
                     Grid.Row="2"/>
-            <Button Content="_Check" 
+            <Button Content="Chec_k" 
                     Command="{Binding CheckHashCommand}"
                     Grid.Column="3" 
                     Grid.Row="2"/>

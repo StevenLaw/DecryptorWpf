@@ -16,6 +16,7 @@ namespace Decryptor.ViewModel
         private string _text;
         private int _workFactor;
         private SecureString _password;
+        private int _passwordLength;
         private HashAlgorithm _hashAlgorithm;
         private EncryptionAlgorithm _encryptionAlgorithm;
         private int _scryptIterations;
@@ -72,6 +73,15 @@ namespace Decryptor.ViewModel
             set
             {
                 _password = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public int PasswordLength
+        {
+            get => _passwordLength;
+            set
+            {
+                _passwordLength = value;
                 NotifyPropertyChanged();
             }
         }

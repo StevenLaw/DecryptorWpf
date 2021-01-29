@@ -25,6 +25,18 @@ namespace Decryptor.UserControls
                                         typeof(ViewablePasswordBox),
                                         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, new PropertyChangedCallback(OnPropertyChangedSuccess)));
 
+        public int PasswordLength
+        {
+            get { return (int)GetValue(PasswordLengthProperty); }
+            set { SetValue(PasswordLengthProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PasswordLength.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PasswordLengthProperty =
+            DependencyProperty.Register("PasswordLength", typeof(int), typeof(ViewablePasswordBox), new PropertyMetadata(0));
+
+
+
         public static void OnPropertyChangedSuccess(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             if (sender is ViewablePasswordBox vpb && e.NewValue is SecureString secure)
@@ -66,17 +78,28 @@ namespace Decryptor.UserControls
         {
             if (e.Key == Key.Enter || e.Key == Key.Return)
                 UpdatePassword(sender);
+
+            switch (sender)
+            {
+                case PasswordBox pwd:
+                    PasswordLength = pwd.SecurePassword.Length;
+                    break;
+                case TextBox txt:
+                    PasswordLength = txt.Text.Length;
+                    break;
+            }
         }
 
         private void UpdatePassword(object sender)
         {
-            if (sender is PasswordBox pwd)
+            switch (sender)
             {
-                Password = pwd.SecurePassword;
-            }
-            else if (sender is TextBlock txt)
-            {
-                Password = txt.Text.ToSecureString();
+                case PasswordBox pwd:
+                    Password = pwd.SecurePassword;
+                    break;
+                case TextBox txt:
+                    Password = txt.Text.ToSecureString();
+                    break;
             }
         }
     }
