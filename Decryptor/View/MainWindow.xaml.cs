@@ -1,7 +1,10 @@
 ﻿using Decryptor.Utilities.Encryption;
 using Decryptor.Utilities.Hashing;
 using Decryptor.ViewModel;
+using Microsoft.Win32;
 using System;
+using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -101,6 +104,65 @@ namespace Decryptor.View
         private void AboutCommand_Execute(object sender, ExecutedRoutedEventArgs e)
         {
             new AboutWindow().ShowDialog();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn)
+            {
+                switch (btn.Name)
+                {
+                    case "btnFileBrowse":
+                        var ofd = new OpenFileDialog
+                        {
+                            Filter = "AES files (*.aes)|*.aes|DES files (*.des)|*.des|All files (*.*)|*.*"
+                        };
+                        if (ofd.ShowDialog(this) == true)
+                        {
+                            if (!ofd.CheckPathExists)
+                            {
+                                MessageBox.Show(this, "Unable to find file path.", "Error", MessageBoxButton.OK,
+                                                  MessageBoxImage.Error);
+                                return;
+                            }
+                            if (!ofd.CheckFileExists)
+                            {
+                                MessageBox.Show(this, "Unable to find file.", "Error", MessageBoxButton.OK,
+                                                MessageBoxImage.Error);
+                                return;
+                            }
+                            vm.Filename = ofd.FileName;
+                            var ext = Path.GetExtension(ofd.FileName);
+                            if (ext.Equals("aes", StringComparison.InvariantCultureIgnoreCase) ||
+                                ext.Equals("des", StringComparison.InvariantCultureIgnoreCase))
+                                vm.OutputFile = Path.ChangeExtension(ofd.FileName, null);
+                            else
+                                vm.OutputFile = $"{ofd.FileName}.{vm.EncryptionAlgorithm.GetDefaultExt()}";
+                        }
+                        break;
+                    case "btnOutputBrowse":
+                        var sfd = new SaveFileDialog
+                        {
+                            DefaultExt = vm.EncryptionAlgorithm.GetDefaultExt()
+                        };
+                        if (sfd.ShowDialog(this) == true)
+                        {
+                            if (!sfd.CheckPathExists)
+                            {
+                                MessageBox.Show(this, "Unable to find file path.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
+                            if (!sfd.CheckFileExists)
+                            {
+                                var overwrite =  MessageBox.Show(this, "Do you want to overwrite this file?", "Error",
+                                                                 MessageBoxButton.YesNo, MessageBoxImage.Error);
+                                if (overwrite == MessageBoxResult.No) return;
+                            }
+                            vm.OutputFile = sfd.FileName;
+                        }
+                        break;
+                }
+            }
         }
     }
 }

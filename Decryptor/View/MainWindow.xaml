@@ -176,7 +176,7 @@
             </StatusBarItem>
 
         </StatusBar>
-        <TabControl>
+        <TabControl SelectedIndex="{Binding Mode}">
             <TabItem Header="Text">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -238,12 +238,52 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
                     <TextBlock Text="Input File"/>
-                    <TextBox Grid.Column="1"/>
-                    <Button Grid.Column="2"
+                    <TextBox Text="{Binding Filename, Mode=TwoWay}"
+                             Grid.Column="1"/>
+                    <Button x:Name="btnFileBrowse"
+                            Click="Button_Click"
+                            Grid.Column="2"
                             Padding="3">
+                        <Image Source="/Resources/iconmonstr-folder-22-16.png"
+                               Style="{StaticResource disabledImage}"
+                               Stretch="None"/>
+                    </Button>
+
+                    <TextBlock Text="Checksum"
+                               Grid.Row="1"/>
+                    <TextBox Text="{Binding Checksum, Mode=TwoWay}" 
+                             Grid.Row="1"
+                             Grid.Column="1"/>
+
+                    <TextBlock Text="Result"
+                               VerticalAlignment="Top"
+                               Grid.Row="2"/>
+                    <TextBlock Text="{Binding Result}" TextWrapping="Wrap"
+                               MinHeight="60"
+                               Grid.Row="2"
+                               Grid.Column="1"/>
+                    <uc:SuccessIndicator Success="{Binding CheckSucceeded}"
+                                         VerticalAlignment="Top"
+                                         Grid.Row="2"
+                                         Grid.Column="2"/>
+
+                    <TextBlock Text="Output File"
+                               Grid.Row="3"/>
+                    <TextBox Text="{Binding OutputFile, Mode=TwoWay}"
+                             Grid.Row="3"
+                             Grid.Column="1"/>
+                    <Button x:Name="btnOutputBrowse" 
+                            Click="Button_Click"
+                            Grid.Row="3"
+                            Grid.Column="2">
                         <Image Source="/Resources/iconmonstr-folder-22-16.png"
                                Style="{StaticResource disabledImage}"
                                Stretch="None"/>

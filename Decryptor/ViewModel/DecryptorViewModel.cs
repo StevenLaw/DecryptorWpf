@@ -29,6 +29,10 @@ namespace Decryptor.ViewModel
         private int _argon2HashLength;
         private bool? _checkSucceeded = null;
         private bool _isBusy = false;
+        private int _mode;
+        private string _filename;
+        private string _checksum;
+        private string _outputFile;
 
         public SecureString Key
         {
@@ -192,6 +196,46 @@ namespace Decryptor.ViewModel
             set
             {
                 _isBusy = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int Mode
+        {
+            get => _mode;
+            set
+            {
+                _mode = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Filename 
+        { 
+            get => _filename; 
+            set
+            {
+                _filename = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Checksum 
+        { 
+            get => _checksum; 
+            set
+            {
+                _checksum = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string OutputFile 
+        { 
+            get => _outputFile; 
+            set
+            {
+                _outputFile = value;
                 NotifyPropertyChanged();
             }
         }
