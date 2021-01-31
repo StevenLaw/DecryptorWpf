@@ -1,5 +1,5 @@
-﻿using Decryptor.Utilities.Encryption;
-using Decryptor.Utilities.Hashing;
+﻿using Decryptor.Enums;
+using Decryptor.Utilities.Encryption;
 using Decryptor.ViewModel;
 using Microsoft.Win32;
 using System;
@@ -22,8 +22,14 @@ namespace Decryptor.View
         {
             InitializeComponent();
             vm = DataContext as DecryptorViewModel;
+            vm.OnError += Vm_OnError;
             SetCheckEnc();
             SetCheckHash();
+        }
+
+        private void Vm_OnError(object sender, ErrorOccuredEventArgs args)
+        {
+            MessageBox.Show(this, args.ErrorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void ExitCommand_Execute(object sender, ExecutedRoutedEventArgs e)

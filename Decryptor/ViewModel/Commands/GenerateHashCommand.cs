@@ -1,6 +1,7 @@
 ﻿using Decryptor.Utilities;
 using Decryptor.Utilities.Hashing;
 using System;
+using System.IO;
 using System.Windows.Input;
 
 namespace Decryptor.ViewModel.Commands
@@ -27,14 +28,31 @@ namespace Decryptor.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            return VM.PasswordLength > 0;
+            return VM.ModeEnum switch
+            {
+                Enums.Modes.Text => VM.PasswordLength > 0,
+                Enums.Modes.File => !string.IsNullOrWhiteSpace(VM.Filename),
+                _ => throw new NotImplementedException(),
+            };
         }
 
         public async void Execute(object parameter)
         {
             VM.IsBusy = true;
             var hash = HashFactory.Create(VM.HashAlgorithm);
-            VM.Result = await hash.GetHashAsync(VM.Password.ToInsecureString());
+            try
+            {
+                VM.Result = VM.ModeEnum switch
+                {
+                    Enums.Modes.Text => await hash.GetHashAsync(VM.Password.ToInsecureString()),
+                    Enums.Modes.File => await hash.GetFileHashAsync(VM.Filename),
+                    _ => throw new NotImplementedException(),
+                };
+            }
+            catch (FileNotFoundException ex)
+            {
+                VM.RaiseError("File not found", ex);
+            }
             VM.CheckSucceeded = null;
             VM.IsBusy = false;
         }

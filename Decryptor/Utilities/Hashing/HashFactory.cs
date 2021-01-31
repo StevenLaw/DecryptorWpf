@@ -1,4 +1,5 @@
-﻿using Decryptor.Interfaces;
+﻿using Decryptor.Enums;
+using Decryptor.Interfaces;
 using System;
 
 namespace Decryptor.Utilities.Hashing

@@ -1,6 +1,7 @@
 ﻿using Decryptor.Interfaces;
 using Konscious.Security.Cryptography;
 using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,12 +10,11 @@ namespace Decryptor.Utilities.Hashing
 {
     public class ArgonHash : IHash
     {
-        private readonly int _degreesOfParallelism;
         private readonly int _argon2Iterations;
+        private readonly int _degreesOfParallelism;
+        private readonly int _hashLength;
         private readonly int _memorySize;
         private readonly int _saltLength;
-        private readonly int _hashLength;
-
         public ArgonHash(int degreesOfParallelism, int argon2Iterations, int memorySize, int saltLength, int hashLength)
         {
             _degreesOfParallelism = degreesOfParallelism;
@@ -24,17 +24,11 @@ namespace Decryptor.Utilities.Hashing
             _hashLength = hashLength;
         }
 
-        private byte[] CreateArgon2Salt()
+        public Task<bool> CheckFileHashAsync(string filename, string hash)
         {
-            return CreateArgon2Salt(_saltLength);
-        }
-
-        private static byte[] CreateArgon2Salt(int saltLength)
-        {
-            var buffer = new byte[saltLength];
-            var rng = new RNGCryptoServiceProvider();
-            rng.GetBytes(buffer);
-            return buffer;
+            var bytes = File.ReadAllBytes(filename);
+            string clearText = Encoding.Default.GetString(bytes);
+            return CheckHashAsync(clearText, hash);
         }
 
         public async Task<bool> CheckHashAsync(string clearText, string hash)
@@ -65,6 +59,40 @@ namespace Decryptor.Utilities.Hashing
             return false;
         }
 
+        public async Task<bool> CheckHashAsync(Stream stream, string hash)
+        {
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            var clearText = Encoding.Default.GetString(ms.ToArray());
+            return await CheckHashAsync(clearText, hash);
+        }
+
+        public async Task<string> GetFileHashAsync(string filename)
+        {
+            var bytes = await File.ReadAllBytesAsync(filename);
+            var clearText = Encoding.Default.GetString(bytes);
+            return await GetArgon2Hash(clearText, CreateArgon2Salt(), _degreesOfParallelism, _argon2Iterations, _memorySize, _hashLength);
+        }
+
+        public async Task<string> GetHashAsync(string clearText) =>
+            await GetArgon2Hash(clearText, CreateArgon2Salt(), _degreesOfParallelism, _argon2Iterations, _memorySize, _hashLength);
+
+        public async Task<string> GetHashAsync(Stream stream)
+        {
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            string clearText = Encoding.Default.GetString(ms.ToArray());
+            return await GetArgon2Hash(clearText, CreateArgon2Salt(), _degreesOfParallelism, _argon2Iterations, _memorySize, _hashLength);
+        }
+
+        private static byte[] CreateArgon2Salt(int saltLength)
+        {
+            var buffer = new byte[saltLength];
+            var rng = new RNGCryptoServiceProvider();
+            rng.GetBytes(buffer);
+            return buffer;
+        }
+
         private static async Task<string> GetArgon2Hash(string clearText, byte[] salt, int degreesOfParallelism, int iterations, int memorySize, int hashLength)
         {
             var argon2 = new Argon2id(Encoding.UTF8.GetBytes(clearText))
@@ -73,7 +101,7 @@ namespace Decryptor.Utilities.Hashing
                 DegreeOfParallelism = degreesOfParallelism,
                 Iterations = iterations,
                 MemorySize = memorySize
-            };
+            }; 
 
             string saltString = Convert.ToBase64String(argon2.Salt);
             byte[] hash = await argon2.GetBytesAsync(hashLength);
@@ -82,9 +110,9 @@ namespace Decryptor.Utilities.Hashing
             return $"$a2${degreesOfParallelism}${iterations}${memorySize}${salt.Length}${hashLength}${saltString}${hashString}";
         }
 
-        public async Task<string> GetHashAsync(string clearText)
+        private byte[] CreateArgon2Salt()
         {
-            return await GetArgon2Hash(clearText, CreateArgon2Salt(), _degreesOfParallelism, _argon2Iterations, _memorySize, _hashLength);
+            return CreateArgon2Salt(_saltLength);
         }
     }
 }

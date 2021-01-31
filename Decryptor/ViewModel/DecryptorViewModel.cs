@@ -1,13 +1,25 @@
-﻿using Decryptor.Utilities;
-using Decryptor.Utilities.Encryption;
-using Decryptor.Utilities.Hashing;
+﻿using Decryptor.Enums;
+using Decryptor.Utilities;
 using Decryptor.ViewModel.Commands;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Security;
 
 namespace Decryptor.ViewModel
 {
+    class ErrorOccuredEventArgs : EventArgs
+    {
+        public ErrorOccuredEventArgs(string errorMessage, Exception exception)
+        {
+            ErrorMessage = errorMessage;
+            Exception = exception;
+        }
+
+        public string ErrorMessage { get; set; }
+        public Exception Exception { get; set; }
+    }
+
     class DecryptorViewModel : INotifyPropertyChanged
     {
         #region Observables
@@ -210,6 +222,11 @@ namespace Decryptor.ViewModel
             }
         }
 
+        public Modes ModeEnum
+        {
+            get => (Modes)_mode;
+        }
+
         public string Filename 
         { 
             get => _filename; 
@@ -264,7 +281,12 @@ namespace Decryptor.ViewModel
         }
         #endregion
 
+        #region Events
+        public delegate void OnErrorHandler(object sender, ErrorOccuredEventArgs args);
+        public event OnErrorHandler OnError;
+
         public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
         public void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
@@ -310,6 +332,11 @@ namespace Decryptor.ViewModel
 
             DecryptCommand.RaiseCanExecuteChanged();
             EncryptCommand.RaiseCanExecuteChanged();
+        }
+
+        public void RaiseError(string message, Exception ex)
+        {
+            OnError?.Invoke(this, new ErrorOccuredEventArgs(message, ex));
         }
     }
 }

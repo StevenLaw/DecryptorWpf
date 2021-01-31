@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Decryptor.Enums;
+using System;
 
 namespace Decryptor.Utilities.Encryption
 {

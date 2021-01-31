@@ -1,4 +1,4 @@
-﻿namespace Decryptor.Utilities.Encryption
+﻿namespace Decryptor.Enums
 {
     public enum EncryptionAlgorithm : byte
     {

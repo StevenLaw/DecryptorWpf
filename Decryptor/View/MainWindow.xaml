@@ -8,10 +8,11 @@
         mc:Ignorable="d"
         Title="Decryptor" 
         Height="300"
-        MinHeight="250"
+        MinHeight="320"
         Width="600" 
         MinWidth="450"
         Icon="/Resources/BlueKey.ico"
+        SizeToContent="WidthAndHeight"
         DataContext="{StaticResource vm}">
     <Window.Resources>
         <RoutedUICommand x:Key="AboutCommand_Execute" Text="About"/>
@@ -32,7 +33,7 @@
         <KeyBinding Command="{Binding GenerateHashCommand}" Key="H" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding CheckHashCommand}" Key="K" Modifiers="Ctrl"/>
     </Window.InputBindings>
-    
+
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_Settings">
@@ -246,7 +247,9 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Text="Input File"/>
-                    <TextBox Text="{Binding Filename, Mode=TwoWay}"
+                    <TextBox Text="{Binding Filename, 
+                                    Mode=TwoWay,
+                                    UpdateSourceTrigger=PropertyChanged}"
                              Grid.Column="1"/>
                     <Button x:Name="btnFileBrowse"
                             Click="Button_Click"
@@ -259,7 +262,9 @@
 
                     <TextBlock Text="Checksum"
                                Grid.Row="1"/>
-                    <TextBox Text="{Binding Checksum, Mode=TwoWay}" 
+                    <TextBox Text="{Binding Checksum, 
+                                    Mode=TwoWay,
+                                    UpdateSourceTrigger=PropertyChanged}" 
                              Grid.Row="1"
                              Grid.Column="1"/>
 
@@ -267,7 +272,7 @@
                                VerticalAlignment="Top"
                                Grid.Row="2"/>
                     <TextBlock Text="{Binding Result}" TextWrapping="Wrap"
-                               MinHeight="60"
+                               MinHeight="45"
                                Grid.Row="2"
                                Grid.Column="1"/>
                     <uc:SuccessIndicator Success="{Binding CheckSucceeded}"
@@ -277,7 +282,9 @@
 
                     <TextBlock Text="Output File"
                                Grid.Row="3"/>
-                    <TextBox Text="{Binding OutputFile, Mode=TwoWay}"
+                    <TextBox Text="{Binding OutputFile, 
+                                    Mode=TwoWay,
+                                    UpdateSourceTrigger=PropertyChanged}"
                              Grid.Row="3"
                              Grid.Column="1"/>
                     <Button x:Name="btnOutputBrowse" 
@@ -288,6 +295,20 @@
                                Style="{StaticResource disabledImage}"
                                Stretch="None"/>
                     </Button>
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Grid.Row="4"
+                                Grid.ColumnSpan="4">
+                        <Button Content="_Encrypt" 
+                            Command="{Binding EncryptCommand}"/>
+                        <Button Content="_Decrypt" 
+                            Command="{Binding DecryptCommand}"/>
+                        <Button Content="_Hash" 
+                            Command="{Binding GenerateHashCommand}"/>
+                        <Button Content="Chec_k" 
+                            Command="{Binding CheckHashCommand}"/>
+                    </StackPanel>
                 </Grid>
             </TabItem>
         </TabControl>

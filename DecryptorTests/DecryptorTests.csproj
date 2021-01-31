@@ -20,4 +20,10 @@
     <ProjectReference Include="..\Decryptor\Decryptor.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Testing.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
