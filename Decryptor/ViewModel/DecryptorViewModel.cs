@@ -8,15 +8,24 @@ using System.Security;
 
 namespace Decryptor.ViewModel
 {
-    class ErrorOccuredEventArgs : EventArgs
+    enum MessageType
     {
-        public ErrorOccuredEventArgs(string errorMessage, Exception exception)
+        Error,
+        Information
+    }
+    class OnMessageEventArgs : EventArgs
+    {
+        public OnMessageEventArgs(string message, string Title, MessageType messageType, Exception exception)
         {
-            ErrorMessage = errorMessage;
+            Message = message;
+            this.Title = Title;
+            MessageType = messageType;
             Exception = exception;
         }
 
-        public string ErrorMessage { get; set; }
+        public string Message { get; set; }
+        public string Title { get; }
+        public MessageType MessageType { get; }
         public Exception Exception { get; set; }
     }
 
@@ -282,8 +291,8 @@ namespace Decryptor.ViewModel
         #endregion
 
         #region Events
-        public delegate void OnErrorHandler(object sender, ErrorOccuredEventArgs args);
-        public event OnErrorHandler OnError;
+        public delegate void OnMessageHandler(object sender, OnMessageEventArgs args);
+        public event OnMessageHandler OnMessage;
 
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
@@ -334,9 +343,9 @@ namespace Decryptor.ViewModel
             EncryptCommand.RaiseCanExecuteChanged();
         }
 
-        public void RaiseError(string message, Exception ex)
+        public void SendMessage(string message, string title = null, MessageType messageType = MessageType.Information, Exception ex = null)
         {
-            OnError?.Invoke(this, new ErrorOccuredEventArgs(message, ex));
+            OnMessage?.Invoke(this, new OnMessageEventArgs(message, title, messageType, ex));
         }
     }
 }

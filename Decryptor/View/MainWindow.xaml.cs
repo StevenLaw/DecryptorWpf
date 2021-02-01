@@ -22,14 +22,23 @@ namespace Decryptor.View
         {
             InitializeComponent();
             vm = DataContext as DecryptorViewModel;
-            vm.OnError += Vm_OnError;
+            vm.OnMessage += Vm_OnMessage;
             SetCheckEnc();
             SetCheckHash();
         }
 
-        private void Vm_OnError(object sender, ErrorOccuredEventArgs args)
+        private void Vm_OnMessage(object sender, OnMessageEventArgs args)
         {
-            MessageBox.Show(this, args.ErrorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(this,
+                            args.Message,
+                            args.Title,
+                            MessageBoxButton.OK,
+                            args.MessageType switch
+                            {
+                                MessageType.Error => MessageBoxImage.Error,
+                                MessageType.Information => MessageBoxImage.Information,
+                                _ => MessageBoxImage.Question,
+                            });
         }
 
         private void ExitCommand_Execute(object sender, ExecutedRoutedEventArgs e)
@@ -112,7 +121,7 @@ namespace Decryptor.View
             new AboutWindow().ShowDialog();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn)
             {
@@ -121,7 +130,7 @@ namespace Decryptor.View
                     case "btnFileBrowse":
                         var ofd = new OpenFileDialog
                         {
-                            Filter = "AES files (*.aes)|*.aes|DES files (*.des)|*.des|All files (*.*)|*.*"
+                            Filter = "All files (*.*)|*.*|AES files (*.aes)|*.aes|DES files (*.des)|*.des"
                         };
                         if (ofd.ShowDialog(this) == true)
                         {
@@ -139,8 +148,8 @@ namespace Decryptor.View
                             }
                             vm.Filename = ofd.FileName;
                             var ext = Path.GetExtension(ofd.FileName);
-                            if (ext.Equals("aes", StringComparison.InvariantCultureIgnoreCase) ||
-                                ext.Equals("des", StringComparison.InvariantCultureIgnoreCase))
+                            if (ext.Equals(".aes", StringComparison.InvariantCultureIgnoreCase) ||
+                                ext.Equals(".des", StringComparison.InvariantCultureIgnoreCase))
                                 vm.OutputFile = Path.ChangeExtension(ofd.FileName, null);
                             else
                                 vm.OutputFile = $"{ofd.FileName}.{vm.EncryptionAlgorithm.GetDefaultExt()}";

@@ -12,7 +12,6 @@
         Width="600" 
         MinWidth="450"
         Icon="/Resources/BlueKey.ico"
-        SizeToContent="WidthAndHeight"
         DataContext="{StaticResource vm}">
     <Window.Resources>
         <RoutedUICommand x:Key="AboutCommand_Execute" Text="About"/>
@@ -252,7 +251,7 @@
                                     UpdateSourceTrigger=PropertyChanged}"
                              Grid.Column="1"/>
                     <Button x:Name="btnFileBrowse"
-                            Click="Button_Click"
+                            Click="BrowseButton_Click"
                             Grid.Column="2"
                             Padding="3">
                         <Image Source="/Resources/iconmonstr-folder-22-16.png"
@@ -288,7 +287,7 @@
                              Grid.Row="3"
                              Grid.Column="1"/>
                     <Button x:Name="btnOutputBrowse" 
-                            Click="Button_Click"
+                            Click="BrowseButton_Click"
                             Grid.Row="3"
                             Grid.Column="2">
                         <Image Source="/Resources/iconmonstr-folder-22-16.png"

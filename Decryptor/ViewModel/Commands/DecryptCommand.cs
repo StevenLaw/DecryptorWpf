@@ -1,5 +1,6 @@
 ﻿using Decryptor.Utilities.Encryption;
 using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 
@@ -27,8 +28,15 @@ namespace Decryptor.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            return VM.Key != null && VM.Key.Length > 0 && 
-                   VM.Text != null && VM.Text.Length > 0;
+            return VM.ModeEnum switch
+            {
+                Enums.Modes.Text => VM.Key != null && VM.Key.Length > 0 &&
+                                    !string.IsNullOrWhiteSpace(VM.Text),
+                Enums.Modes.File => VM.Key != null && VM.Key.Length > 0 &&
+                                    !string.IsNullOrWhiteSpace(VM.Filename) &&
+                                    !string.IsNullOrWhiteSpace(VM.OutputFile),
+                _ => throw new NotImplementedException(),
+            };
         }
 
         public async void Execute(object parameter)
@@ -37,15 +45,22 @@ namespace Decryptor.ViewModel.Commands
             try
             {
                 VM.IsBusy = true;
-                VM.Result = await encryption.DecryptAsync(VM.Text);
+                switch (VM.ModeEnum)
+                {
+                    case Enums.Modes.Text:
+                        VM.Result = await encryption.DecryptAsync(VM.Text);
+                        break;
+                    case Enums.Modes.File:
+                        await encryption.DecryptAsync(VM.Filename, VM.OutputFile);
+                        VM.SendMessage($"{Path.GetFileName(VM.Filename)} was decrypted as {Path.GetFileName(VM.OutputFile)}", "Success");
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show(Application.Current.MainWindow,
-                                "This text was not encrypted using this key",
-                                "Wrong Key",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Error);
+                VM.SendMessage("This text was not encrypted using this key", "Wrong Key", MessageType.Error, ex);
             }
             finally
             {
@@ -54,7 +69,7 @@ namespace Decryptor.ViewModel.Commands
             }
         }
 
-        public void RaiseCanExecuteChanged()
+        public static void RaiseCanExecuteChanged()
         {
             CommandManager.InvalidateRequerySuggested();
         }

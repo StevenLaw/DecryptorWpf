@@ -51,7 +51,7 @@ namespace Decryptor.ViewModel.Commands
             }
             catch (FileNotFoundException ex)
             {
-                VM.RaiseError("File not found", ex);
+                VM.SendMessage($"Couldn't find file {VM.Filename}", "File not found", MessageType.Error, ex);
             }
             VM.IsBusy = false;
         }
