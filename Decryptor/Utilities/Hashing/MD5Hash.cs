@@ -34,7 +34,7 @@ namespace Decryptor.Utilities.Hashing
                 var sb = new StringBuilder();
                 foreach (byte b in hash)
                 {
-                    sb.AppendFormat("{0:x}", b);
+                    sb.AppendFormat("{0:x2}", b);
                 }
                 return sb.ToString();
             });
@@ -48,7 +48,7 @@ namespace Decryptor.Utilities.Hashing
             var sb = new StringBuilder();
             foreach (byte b in hash)
             {
-                sb.AppendFormat("{0:x}", b);
+                sb.AppendFormat("{0:x2}", b);
             }
             return sb.ToString();
         }
