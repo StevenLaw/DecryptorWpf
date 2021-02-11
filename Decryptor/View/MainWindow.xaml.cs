@@ -147,12 +147,6 @@ namespace Decryptor.View
                                 return;
                             }
                             vm.Filename = ofd.FileName;
-                            var ext = Path.GetExtension(ofd.FileName);
-                            if (ext.Equals(".aes", StringComparison.InvariantCultureIgnoreCase) ||
-                                ext.Equals(".des", StringComparison.InvariantCultureIgnoreCase))
-                                vm.OutputFile = Path.ChangeExtension(ofd.FileName, null);
-                            else
-                                vm.OutputFile = $"{ofd.FileName}.{vm.EncryptionAlgorithm.GetDefaultExt()}";
                         }
                         break;
                     case "btnOutputBrowse":

@@ -1,8 +1,10 @@
 ﻿using Decryptor.Enums;
 using Decryptor.Utilities;
+using Decryptor.Utilities.Encryption;
 using Decryptor.ViewModel.Commands;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Security;
 
@@ -242,6 +244,7 @@ namespace Decryptor.ViewModel
             set
             {
                 _filename = value;
+                SuggestOutputFilename(value);
                 NotifyPropertyChanged();
             }
         }
@@ -346,6 +349,20 @@ namespace Decryptor.ViewModel
         public void SendMessage(string message, string title = null, MessageType messageType = MessageType.Information, Exception ex = null)
         {
             OnMessage?.Invoke(this, new OnMessageEventArgs(message, title, messageType, ex));
+        }
+
+        private void SuggestOutputFilename(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                OutputFile = string.Empty;
+                return;
+            }
+            var ext = Path.GetExtension(value);
+            if (ext.IsEncryptionExtension())
+                OutputFile = Path.ChangeExtension(value, null);
+            else
+                OutputFile = $"{value}.{EncryptionAlgorithm.GetDefaultExt()}";
         }
     }
 }
