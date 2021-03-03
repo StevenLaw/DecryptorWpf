@@ -1,4 +1,5 @@
 ﻿using Decryptor.Interfaces;
+using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -9,13 +10,13 @@ namespace Decryptor.Utilities.Hashing
     public class SHA512Hash : IHash
     {
         public async Task<bool> CheckFileHashAsync(string filename, string hash) =>
-            await GetFileHashAsync(filename) == hash;
+            (await GetFileHashAsync(filename)).Equals(hash, StringComparison.OrdinalIgnoreCase);
 
         public async Task<bool> CheckHashAsync(string clearText, string hash) =>
-            await GetHashAsync(clearText) == hash;
+            (await GetHashAsync(clearText)).Equals(hash, StringComparison.OrdinalIgnoreCase);
 
         public async Task<bool> CheckHashAsync(Stream stream, string hash) =>
-            await GetHashAsync(stream) == hash;
+            (await GetHashAsync(stream)).Equals(hash, StringComparison.OrdinalIgnoreCase);
 
         public async Task<string> GetFileHashAsync(string filename)
         {
