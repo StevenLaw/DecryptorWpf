@@ -27,6 +27,12 @@
     <None Update="Crypt.txt.des">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Crypt1.txt.3ds">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Crypt2.txt.3ds">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Testing.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
