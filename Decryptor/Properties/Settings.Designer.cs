@@ -166,5 +166,17 @@ namespace Decryptor.Properties {
                 this["EncryptionAlgorithm"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public byte TripleDesKeySize {
+            get {
+                return ((byte)(this["TripleDesKeySize"]));
+            }
+            set {
+                this["TripleDesKeySize"] = value;
+            }
+        }
     }
 }

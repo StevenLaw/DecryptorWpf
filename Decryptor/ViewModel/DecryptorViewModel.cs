@@ -5,6 +5,7 @@ using Decryptor.ViewModel.Commands;
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security;
 
@@ -56,6 +57,7 @@ namespace Decryptor.ViewModel
         private string _filename;
         private string _checksum;
         private string _outputFile;
+        private string _selectedTripleDesKeySize;
 
         public SecureString Key
         {
@@ -268,6 +270,21 @@ namespace Decryptor.ViewModel
                 NotifyPropertyChanged();
             }
         }
+
+#pragma warning disable CA1822 // Mark members as static
+                               // Needs to be data bound to.
+        public string[] TDesKeySizes => TripleDesUtil.KeySizes;
+#pragma warning restore CA1822 // Mark members as static
+
+        public string SelectedTripleDesKeySize 
+        { 
+            get => _selectedTripleDesKeySize;
+            set
+            {
+                _selectedTripleDesKeySize = value;
+                NotifyPropertyChanged();
+            }
+        }
         #endregion
 
         #region Commands
@@ -322,6 +339,8 @@ namespace Decryptor.ViewModel
             MemorySize = Properties.Settings.Default.Argon2MemorySize;
             Argon2SaltLength = Properties.Settings.Default.Argon2SaltLength;
             Argon2HashLength = Properties.Settings.Default.Argon2HashLength;
+            TripleDesKeySize tDesKeySize = (TripleDesKeySize)Properties.Settings.Default.TripleDesKeySize;
+            SelectedTripleDesKeySize = tDesKeySize.GetDisplayString();
 
             DecryptCommand.RaiseCanExecuteChanged();
             EncryptCommand.RaiseCanExecuteChanged();
@@ -340,6 +359,8 @@ namespace Decryptor.ViewModel
             Properties.Settings.Default.Argon2MemorySize = MemorySize;
             Properties.Settings.Default.Argon2SaltLength = Argon2SaltLength;
             Properties.Settings.Default.Argon2HashLength = Argon2HashLength;
+            TripleDesKeySize tDesKeySize = TripleDesUtil.Parse(SelectedTripleDesKeySize);
+            Properties.Settings.Default.TripleDesKeySize = (byte)tDesKeySize;
             Properties.Settings.Default.Save();
 
             DecryptCommand.RaiseCanExecuteChanged();

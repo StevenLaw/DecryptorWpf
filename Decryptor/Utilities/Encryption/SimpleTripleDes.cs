@@ -1,6 +1,7 @@
 ﻿using Decryptor.Interfaces;
 using System;
 using System.IO;
+using System.Linq;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
@@ -120,9 +121,37 @@ namespace Decryptor.Utilities.Encryption
             return bytes[0..(bytes.Length - count)];
         }
     }
-    public enum TripleDesKeySize
+    public enum TripleDesKeySize : byte
     {
-        b128,
-        b192
+        b128 = 0x0,
+        b192 = 0x1
+    }
+
+    public static class TripleDesUtil
+    {
+        private const string Disp128 = "128 byte key";
+        private const string Disp192 = "192 byte key";
+        private const string InvalidKeyError = "Invalid key size";
+
+        public static string GetDisplayString(this TripleDesKeySize value) => 
+            value switch
+            {
+                TripleDesKeySize.b128 => Disp128,
+                TripleDesKeySize.b192 => Disp192,
+                _ => throw new ArgumentOutOfRangeException(nameof(value), value.ToString(), InvalidKeyError),
+            };
+        public static TripleDesKeySize Parse(string value) =>
+            value switch
+            {
+                Disp128 => TripleDesKeySize.b128,
+                Disp192 => TripleDesKeySize.b192,
+                _ => Enum.TryParse(value, out TripleDesKeySize result) 
+                ? result 
+                : throw new ArgumentOutOfRangeException(nameof(value), value.ToString(), InvalidKeyError),
+            };
+        public static string[] KeySizes => 
+            Enum.GetValues<TripleDesKeySize>()
+            .Select(x => x.GetDisplayString())
+            .ToArray();
     }
 }
