@@ -9,137 +9,40 @@
         xmlns:local="clr-namespace:Decryptor.View"
         mc:Ignorable="d"
         Title="Settings" 
+        MinHeight="200"
+        MinWidth="555"
+        Height="400"
         Width="600" 
-        SizeToContent="Height"
-        ResizeMode="NoResize"
         Icon="/Resources/BlueKey.ico"
         DataContext="{StaticResource vm}">
-    <StackPanel>
-        <GroupBox Header="Encryption">
-            <StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Key"/>
-                    <uc:ViewablePasswordBox x:Name="key"
-                                        Password="{Binding Key}"
-                                        Grid.Column="1"/>
-                    <CheckBox Content="Show Key" Grid.Column="2" Click="CheckBox_Click"/>
-                </Grid>
-                <GroupBox Header="Triple DES">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Mode"/>
-                        <ComboBox 
-                            ItemsSource="{Binding TDesKeySizes}"
-                            SelectedValue="{Binding SelectedTripleDesKeySize}"
-                            Grid.Column="1"/>
-                    </Grid>
-                </GroupBox>
-            </StackPanel>
-        </GroupBox>
-        <GroupBox Header="Hashing">
-            <StackPanel>
-                <GroupBox Header="BCrypt">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Work Factor"/>
-                        <xcd:IntegerUpDown Value="{Binding WorkFactor}" HorizontalAlignment="Stretch" Grid.Column="1"/>
-                    </Grid>
-                </GroupBox>
-                <GroupBox Header="Scrypt">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
-
-                        <TextBlock Text="Iteration Count"/>
-                        <xcd:IntegerUpDown Value="{Binding ScryptIterations}" Grid.Column="1" Visibility="Collapsed"/>
-                        <ComboBox x:Name="cmbIterations"
-                          SelectedItem="{Binding ScryptIterations}"
-                          Grid.Column="1"/>
-
-                        <TextBlock Text="Block Size" Grid.Column="2"/>
-                        <xcd:IntegerUpDown Minimum="1" 
-                                   Value="{Binding BlockCount}" 
-                                   Grid.Column="3"/>
-
-                        <TextBlock Text="Thread Count" Grid.Row="1"/>
-                        <xcd:IntegerUpDown Minimum="1" 
-                                   Value="{Binding ThreadCount}" 
-                                   Grid.Column="1" 
-                                   Grid.Row="1"/>
-                    </Grid>
-                </GroupBox>
-                <GroupBox Header="Argon2">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
-
-                        <TextBlock Text="Degrees of Parallelism"/>
-                        <xcd:IntegerUpDown Minimum="1" 
-                                   Value="{Binding DegreesOfParallelism}" 
-                                   Grid.Column="1"/>
-
-                        <TextBlock Text="Iterations" Grid.Column="2"/>
-                        <xcd:IntegerUpDown Minimum="1" 
-                                   Value="{Binding Argon2Iterations}" 
-                                   Grid.Column="3"/>
-
-                        <TextBlock Text="Memory Size" Grid.Row="1"/>
-                        <xcd:IntegerUpDown Minimum="4" 
-                                   Value="{Binding MemorySize}" 
-                                   Grid.Column="1" 
-                                   Grid.Row="1"/>
-
-                        <TextBlock Text="Salt Length" 
-                           Grid.Column="2" 
-                           Grid.Row="1"/>
-                        <xcd:IntegerUpDown Minimum="16"
-                                   Maximum="1024"
-                                   Value="{Binding Argon2SaltLength}"
-                                   Grid.Column="3"
-                                   Grid.Row="1"/>
-
-                        <TextBlock Text="Hash Length" Grid.Row="2"/>
-                        <xcd:IntegerUpDown Minimum="16"
-                                   Maximum="1024"
-                                   Value="{Binding Argon2HashLength}"
-                                   Grid.Column="1"
-                                   Grid.Row="2"/>
-                    </Grid>
-                </GroupBox>
-            </StackPanel>
-        </GroupBox>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <TreeView SelectedItemChanged="TreeView_SelectedItemChanged"
+                  Grid.RowSpan="2">
+            <TreeViewItem Header="Encryption" IsExpanded="True">
+                <TreeViewItem Header="General"/>
+                <TreeViewItem Header="Triple DES"/>
+            </TreeViewItem>
+            <TreeViewItem Header="Hashing" IsExpanded="True">
+                <TreeViewItem Header="BCrypt"/>
+                <TreeViewItem Header="Scrypt"/>
+                <TreeViewItem Header="Argon2"/>
+            </TreeViewItem>
+        </TreeView>
+        <ContentControl x:Name="ccSettings"
+                        Grid.Column="1"/>
+        <StackPanel Orientation="Horizontal" 
+                    HorizontalAlignment="Right"
+                    Grid.Column="1"
+                    Grid.Row="1">
             <Button x:Name="Save" 
                     Content="Save" 
                     IsDefault="True" 
@@ -149,5 +52,141 @@
                     IsCancel="True" 
                     Click="Cancel_Click"/>
         </StackPanel>
-    </StackPanel>
+        <!--<StackPanel>
+            <GroupBox Header="Encryption">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Key"/>
+                        <uc:ViewablePasswordBox x:Name="key"
+                                        Password="{Binding Key}"
+                                        Grid.Column="1"/>
+                        <CheckBox Content="Show Key" Grid.Column="2" Click="CheckBox_Click"/>
+                    </Grid>
+                    <GroupBox Header="Triple DES">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Mode"/>
+                            <ComboBox 
+                            ItemsSource="{Binding TDesKeySizes}"
+                            SelectedValue="{Binding SelectedTripleDesKeySize}"
+                            Grid.Column="1"/>
+                        </Grid>
+                    </GroupBox>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Hashing">
+                <StackPanel>
+                    <GroupBox Header="BCrypt">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Work Factor"/>
+                            <xcd:IntegerUpDown Value="{Binding WorkFactor}" HorizontalAlignment="Stretch" Grid.Column="1"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Scrypt">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Iteration Count"/>
+                            <xcd:IntegerUpDown Value="{Binding ScryptIterations}" Grid.Column="1" Visibility="Collapsed"/>
+                            <ComboBox x:Name="cmbIterations"
+                          SelectedItem="{Binding ScryptIterations}"
+                          Grid.Column="1"/>
+
+                            <TextBlock Text="Block Size" Grid.Column="2"/>
+                            <xcd:IntegerUpDown Minimum="1" 
+                                   Value="{Binding BlockCount}" 
+                                   Grid.Column="3"/>
+
+                            <TextBlock Text="Thread Count" Grid.Row="1"/>
+                            <xcd:IntegerUpDown Minimum="1" 
+                                   Value="{Binding ThreadCount}" 
+                                   Grid.Column="1" 
+                                   Grid.Row="1"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Argon2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Degrees of Parallelism"/>
+                            <xcd:IntegerUpDown Minimum="1" 
+                                   Value="{Binding DegreesOfParallelism}" 
+                                   Grid.Column="1"/>
+
+                            <TextBlock Text="Iterations" Grid.Column="2"/>
+                            <xcd:IntegerUpDown Minimum="1" 
+                                   Value="{Binding Argon2Iterations}" 
+                                   Grid.Column="3"/>
+
+                            <TextBlock Text="Memory Size" Grid.Row="1"/>
+                            <xcd:IntegerUpDown Minimum="4" 
+                                   Value="{Binding MemorySize}" 
+                                   Grid.Column="1" 
+                                   Grid.Row="1"/>
+
+                            <TextBlock Text="Salt Length" 
+                           Grid.Column="2" 
+                           Grid.Row="1"/>
+                            <xcd:IntegerUpDown Minimum="16"
+                                   Maximum="1024"
+                                   Value="{Binding Argon2SaltLength}"
+                                   Grid.Column="3"
+                                   Grid.Row="1"/>
+
+                            <TextBlock Text="Hash Length" Grid.Row="2"/>
+                            <xcd:IntegerUpDown Minimum="16"
+                                   Maximum="1024"
+                                   Value="{Binding Argon2HashLength}"
+                                   Grid.Column="1"
+                                   Grid.Row="2"/>
+                        </Grid>
+                    </GroupBox>
+                </StackPanel>
+            </GroupBox>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="Save" 
+                    Content="Save" 
+                    IsDefault="True" 
+                    Click="Save_Click"/>
+                <Button x:Name="Cancel" 
+                    Content="Cancel" 
+                    IsCancel="True" 
+                    Click="Cancel_Click"/>
+            </StackPanel>
+        </StackPanel>-->
+    </Grid>
 </Window>

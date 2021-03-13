@@ -110,6 +110,9 @@
                 <MenuItem x:Name="miDes"
                           Header="DES"
                           Click="EncMenuItem_Click"/>
+                <MenuItem x:Name="miTDes"
+                          Header="Triple DES"
+                          Click="EncMenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="_Hash Algorithm">
                 <MenuItem x:Name="miBCrypt" 

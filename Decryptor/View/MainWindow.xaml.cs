@@ -63,7 +63,8 @@ namespace Decryptor.View
         {
             if (sender is MenuItem menuItem && ! menuItem.IsChecked)
             {
-                if (Enum.TryParse(menuItem.Header.ToString(), out EncryptionAlgorithm algo))
+                var algo = EncryptionUtil.ParseAlgorithm(menuItem.Header.ToString());
+                if (algo != EncryptionAlgorithm.None)
                 {
                     vm.EncryptionAlgorithm = algo;
                     Properties.Settings.Default.EncryptionAlgorithm = (byte)algo;
@@ -80,6 +81,8 @@ namespace Decryptor.View
             else miAes.IsChecked = false;
             if (algorithm == EncryptionAlgorithm.DES) miDes.IsChecked = true;
             else miDes.IsChecked = false;
+            if (algorithm == EncryptionAlgorithm.TripleDES) miTDes.IsChecked = true;
+            else miTDes.IsChecked = false;
         }
 
         private void HashMenuItem_Click(object sender, RoutedEventArgs e)
@@ -130,7 +133,7 @@ namespace Decryptor.View
                     case "btnFileBrowse":
                         var ofd = new OpenFileDialog
                         {
-                            Filter = "All files (*.*)|*.*|AES files (*.aes)|*.aes|DES files (*.des)|*.des"
+                            Filter = "All files (*.*)|*.*|AES files (*.aes)|*.aes|DES files (*.des)|*.des|Triple DES files (*.3ds)|*.3ds"
                         };
                         if (ofd.ShowDialog(this) == true)
                         {
