@@ -1,24 +1,33 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
+using Decryptor.Utilities.Hashing;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Decryptor.Utilities.Hashing.Tests
 {
     [TestClass()]
-    public class SHA256HashTests
+    public class Pbkdf2HashTests
     {
-        private const string failHash = "6fe7d7112caaba1b1bc7bfa656974ac416cc525a7286117494f5b29dfec1f77";
-        private const string fileHash = "58939fa578b702c8c18d85b10c49b68fabbef1cb819da2a6ecc475a843fb4b69";
+        private const string failHash = "$TEST$V1$10000$k3AF2eDUs/P7eTHWP1UPbZ8DEeROYxnAemGWlScnuxU3dq0S";
+        private const string fileHash = "$TEST$V1$10000$r/FrbrwsQxTV/2oVG7hr+WtKkX3FJJ/lgLwLx8hjuCynNeB9";
         private const string filename = "Testing.txt";
-        private const string resultHash = "bf67a78f571d7ecad67ad2a5ea064edc969def57649c69fbb22eb72f4c56f87a";
+        private const string resultHash = "$TEST$V1$10000$vv+lw9p6POPFCFqAKq3yjaY8RTldUJF/ANFLxYePJEfjSWYl";
         private const string sample = "This is sample text";
+        private const string _prefix = "$TEST$V1$";
+        private const int _saltSize = 16;
+        private const int _hashSize = 20;
+        private const int _iterations = 10000;
+
 
         [TestMethod()]
         public async Task CheckFileHashAsyncTest()
         {
             // Arrange
-            var handler = new SHA256Hash();
+            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
             // Act
             bool matches = await handler.CheckFileHashAsync(filename, fileHash);
@@ -31,7 +40,7 @@ namespace Decryptor.Utilities.Hashing.Tests
         public async Task CheckFileHashFailTest()
         {
             // Arrange
-            var handler = new SHA256Hash();
+            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
             // Act
             bool matches = await handler.CheckFileHashAsync(filename, failHash);
@@ -44,7 +53,7 @@ namespace Decryptor.Utilities.Hashing.Tests
         public async Task CheckHashAsyncStreamTest()
         {
             // Arrange
-            var handler = new SHA256Hash();
+            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(sample));
 
             // Act
@@ -58,7 +67,7 @@ namespace Decryptor.Utilities.Hashing.Tests
         public async Task CheckHashAsyncTest()
         {
             // Arrange
-            var handler = new SHA256Hash();
+            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
             // Act
             bool matches = await handler.CheckHashAsync(sample, resultHash);
@@ -71,7 +80,7 @@ namespace Decryptor.Utilities.Hashing.Tests
         public async Task CheckHashFailStreamTest()
         {
             // Arrange
-            var handler = new SHA256Hash();
+            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(sample));
 
             // Act
@@ -85,7 +94,7 @@ namespace Decryptor.Utilities.Hashing.Tests
         public async Task CheckHashFailTest()
         {
             // Arrange
-            var handler = new SHA256Hash();
+            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
             // Act
             bool matches = await handler.CheckHashAsync(sample, failHash);
@@ -98,7 +107,7 @@ namespace Decryptor.Utilities.Hashing.Tests
         public async Task GetAndCheckFileHashTest()
         {
             // Arrange
-            var handler = new SHA256Hash();
+            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
             // Act
             string hash = await handler.GetFileHashAsync(filename);
@@ -112,7 +121,7 @@ namespace Decryptor.Utilities.Hashing.Tests
         public async Task GetAndCheckHashStreamTest()
         {
             // Arrange
-            var handler = new SHA256Hash();
+            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(sample));
 
             // Act
@@ -128,7 +137,7 @@ namespace Decryptor.Utilities.Hashing.Tests
         public async Task GetAndCheckHashTest()
         {
             // Arrange
-            var handler = new SHA256Hash();
+            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
             // Act
             string hash = await handler.GetHashAsync(sample);
@@ -142,7 +151,7 @@ namespace Decryptor.Utilities.Hashing.Tests
         public async Task GetFileHashAsyncTest()
         {
             // Arrange
-            var handler = new SHA256Hash();
+            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
             // Act
             string hash = await handler.GetFileHashAsync(filename);
@@ -155,7 +164,7 @@ namespace Decryptor.Utilities.Hashing.Tests
         public async Task GetHashAsyncStreamTest()
         {
             // Arrange
-            var handler = new SHA256Hash();
+            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(sample));
 
             // Act
@@ -169,7 +178,7 @@ namespace Decryptor.Utilities.Hashing.Tests
         public async Task GetHashAsyncTest()
         {
             // Arrange
-            var handler = new SHA256Hash();
+            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
             // Act
             string hash = await handler.GetHashAsync(sample);

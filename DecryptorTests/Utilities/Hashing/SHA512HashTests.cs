@@ -9,9 +9,9 @@ namespace Decryptor.Utilities.Hashing.Tests
     public class SHA512HashTests
     {
         private const string failHash = "c85fb94f63c5b9f93e495fb57589656d31b4411ec793a11fde64039fdaa2da859d14d41672414864691637f8265072f64e238d7ce277437927ca7ccbfa869c";
-        private const string fileHash = "d35f4e14d0621a1cb0649a25b69644e7ac569fcd244bfd51e87e1d570213e9a3d411f6441544d42c44cc81be9ac2e437314718f22b4d67eaa5671afdd2166";
+        private const string fileHash = "d35f04e14d00621a1cb0649a25b69644e7ac569fcd244bfd51e87e1d0570213e9a3d411f6441544d42c44cc81be9ac2e437314718f22b4d67eaa5671afdd2166";
         private const string filename = "Testing.txt";
-        private const string resultHash = "cce3233e201810a61541ecc0e2a69bda7de751d8f35c2fcd7b19bd612543ae18885a1d7d32f3c46cc5cab91268a93b3d4431d3b14d6eee1e44954a4513b";
+        private const string resultHash = "cce3233e201810a61541ecc0e2a69bda7de751d80f35c2fcd70b19bd0612543ae18885a1d7d32f3c460cc5cab91268a93b3d04431d3b14d6eee1e44954a4513b";
         private const string sample = "This is sample text";
 
         [TestMethod()]

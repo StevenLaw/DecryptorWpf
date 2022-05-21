@@ -9,9 +9,9 @@ namespace Decryptor.Utilities.Hashing.Tests
     public class MD5HashTests
     {
         private const string failHash = "7ff3e75ce6aca348bc513ed3d5882946";
-        private const string fileHash = "619e5ba661b4fc6602554a7b2eb731f";
+        private const string fileHash = "619e5ba661b4fc66002554a7b2eb731f";
         private const string filename = "Testing.txt";
-        private const string resultHash = "636351fcb9197f5e75b84562858bbb1";
+        private const string resultHash = "636351fcb9197f5e75b845628508bbb1";
         private const string sample = "This is sample text";
 
         [TestMethod()]

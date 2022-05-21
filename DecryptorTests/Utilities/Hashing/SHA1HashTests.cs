@@ -11,7 +11,7 @@ namespace Decryptor.Utilities.Hashing.Tests
         private const string failHash = "be7e10d1c5dd2ad77f6d5a617372a7bf13cb7bf";
         private const string fileHash = "873cd273cdff8922f7c3e182971ac9c87973b86a";
         private const string filename = "Testing.txt";
-        private const string hash = "451d99c8281f579bdf1e2bfa2a63fd23707037";
+        private const string hash = "451d99c8281f579bdf1e2b0f0a2a63fd23707037";
         private const string sample = "This is sample text";
 
         [TestMethod()]
