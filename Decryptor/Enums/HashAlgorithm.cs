@@ -9,6 +9,7 @@
         MD5 = 0x4,
         SHA1 = 0x5,
         SHA256 = 0x6,
-        SHA512 = 0x7
+        SHA512 = 0x7,
+        PBKDF2 = 0x8,
     }
 }

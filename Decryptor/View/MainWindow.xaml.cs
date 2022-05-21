@@ -117,6 +117,8 @@ namespace Decryptor.View
             else miSHA256.IsChecked = false;
             if (algorithm == HashAlgorithm.SHA512) miSHA512.IsChecked = true;
             else miSHA512.IsChecked = false;
+            if (algorithm == HashAlgorithm.PBKDF2) miPbkdf2.IsChecked = true;
+            else miPbkdf2.IsChecked= false;
         }
 
         private void AboutCommand_Execute(object sender, ExecutedRoutedEventArgs e)

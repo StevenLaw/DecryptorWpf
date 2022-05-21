@@ -23,6 +23,11 @@ namespace Decryptor.Utilities.Hashing
                     Properties.Settings.Default.Argon2SaltLength,
                     Properties.Settings.Default.Argon2HashLength
                 ),
+                HashAlgorithm.PBKDF2 => new Pbkdf2Hash(
+                    Properties.Settings.Default.Pbkdf2Iterations,
+                    Properties.Settings.Default.Pbkdf2SaltSize,
+                    Properties.Settings.Default.Pbkdf2HashSize,
+                    Properties.Settings.Default.Pbkdf2Prefix),
                 HashAlgorithm.MD5 => new MD5Hash(),
                 HashAlgorithm.SHA1 => new SHA1Hash(),
                 HashAlgorithm.SHA256 => new SHA256Hash(),

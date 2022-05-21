@@ -58,6 +58,10 @@ namespace Decryptor.ViewModel
         private string _checksum;
         private string _outputFile;
         private string _selectedTripleDesKeySize;
+        private int _pbkdf2Iterations;
+        private int _pbkdf2SaltSize;
+        private int _pbkdf2HashSize;
+        private string _pbkdf2Prefix;
 
         public SecureString Key
         {
@@ -117,17 +121,17 @@ namespace Decryptor.ViewModel
         public HashAlgorithm HashAlgorithm
         {
             get => _hashAlgorithm;
-            set 
+            set
             {
                 _hashAlgorithm = value;
                 NotifyPropertyChanged();
             }
         }
 
-        public EncryptionAlgorithm EncryptionAlgorithm 
-        { 
-            get => _encryptionAlgorithm; 
-            set 
+        public EncryptionAlgorithm EncryptionAlgorithm
+        {
+            get => _encryptionAlgorithm;
+            set
             {
                 _encryptionAlgorithm = value;
                 NotifyPropertyChanged();
@@ -240,9 +244,9 @@ namespace Decryptor.ViewModel
             get => (Modes)_mode;
         }
 
-        public string Filename 
-        { 
-            get => _filename; 
+        public string Filename
+        {
+            get => _filename;
             set
             {
                 _filename = value;
@@ -251,9 +255,9 @@ namespace Decryptor.ViewModel
             }
         }
 
-        public string Checksum 
-        { 
-            get => _checksum; 
+        public string Checksum
+        {
+            get => _checksum;
             set
             {
                 _checksum = value;
@@ -261,9 +265,9 @@ namespace Decryptor.ViewModel
             }
         }
 
-        public string OutputFile 
-        { 
-            get => _outputFile; 
+        public string OutputFile
+        {
+            get => _outputFile;
             set
             {
                 _outputFile = value;
@@ -272,16 +276,56 @@ namespace Decryptor.ViewModel
         }
 
 #pragma warning disable CA1822 // Mark members as static
-                               // Needs to be data bound to.
+        // Needs to be data bound to.
         public string[] TDesKeySizes => TripleDesUtil.KeySizes;
 #pragma warning restore CA1822 // Mark members as static
 
-        public string SelectedTripleDesKeySize 
-        { 
+        public string SelectedTripleDesKeySize
+        {
             get => _selectedTripleDesKeySize;
             set
             {
                 _selectedTripleDesKeySize = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int Pbkdf2Iterations
+        {
+            get => _pbkdf2Iterations;
+            set
+            {
+                _pbkdf2Iterations = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int Pbkdf2SaltSize
+        {
+            get => _pbkdf2SaltSize;
+            set
+            {
+                _pbkdf2SaltSize = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int Pbkdf2HashSize
+        {
+            get => _pbkdf2HashSize;
+            set
+            {
+                _pbkdf2HashSize = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Pbkdf2Prefix
+        {
+            get => _pbkdf2Prefix;
+            set
+            {
+                _pbkdf2Prefix = value;
                 NotifyPropertyChanged();
             }
         }
@@ -341,6 +385,10 @@ namespace Decryptor.ViewModel
             Argon2HashLength = Properties.Settings.Default.Argon2HashLength;
             TripleDesKeySize tDesKeySize = (TripleDesKeySize)Properties.Settings.Default.TripleDesKeySize;
             SelectedTripleDesKeySize = tDesKeySize.GetDisplayString();
+            Pbkdf2HashSize = Properties.Settings.Default.Pbkdf2HashSize;
+            Pbkdf2Iterations = Properties.Settings.Default.Pbkdf2Iterations;
+            Pbkdf2Prefix = Properties.Settings.Default.Pbkdf2Prefix;
+            Pbkdf2SaltSize = Properties.Settings.Default.Pbkdf2SaltSize;
 
             DecryptCommand.RaiseCanExecuteChanged();
             EncryptCommand.RaiseCanExecuteChanged();
@@ -361,6 +409,10 @@ namespace Decryptor.ViewModel
             Properties.Settings.Default.Argon2HashLength = Argon2HashLength;
             TripleDesKeySize tDesKeySize = TripleDesUtil.Parse(SelectedTripleDesKeySize);
             Properties.Settings.Default.TripleDesKeySize = (byte)tDesKeySize;
+            Properties.Settings.Default.Pbkdf2HashSize = Pbkdf2HashSize;
+            Properties.Settings.Default.Pbkdf2Iterations = Pbkdf2Iterations;
+            Properties.Settings.Default.Pbkdf2Prefix = Pbkdf2Prefix;
+            Properties.Settings.Default.Pbkdf2SaltSize = Pbkdf2SaltSize;
             Properties.Settings.Default.Save();
 
             DecryptCommand.RaiseCanExecuteChanged();

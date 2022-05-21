@@ -18,30 +18,8 @@ namespace Decryptor.View
             InitializeComponent();
 
             vm = DataContext as DecryptorViewModel;
-            //SetupIterationComboBox();
             ccSettings.Content = new GeneralEncryptionView();
         }
-
-        //private void SetupIterationComboBox()
-        //{
-
-        //    var iterationValues = new List<int>();
-        //    int i = 2;
-        //    while (i > 0)
-        //    {
-        //        iterationValues.Add(i);
-        //        i *= 2;
-        //    }
-        //    cmbIterations.ItemsSource = iterationValues;
-        //}
-
-        //private void CheckBox_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (sender is CheckBox checkBox)
-        //    {
-        //        key.ShowPassword(checkBox.IsChecked == true);
-        //    }
-        //}
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
@@ -75,6 +53,9 @@ namespace Decryptor.View
                         break;
                     case "Argon2":
                         ccSettings.Content = new ArgonView();
+                        break;
+                    case "PBKDF2":
+                        ccSettings.Content = new Pbkdf2View();
                         break;
                 }
             }

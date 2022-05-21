@@ -12,7 +12,7 @@ namespace Decryptor.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.2.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -176,6 +176,54 @@ namespace Decryptor.Properties {
             }
             set {
                 this["TripleDesKeySize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public int Pbkdf2HashSize {
+            get {
+                return ((int)(this["Pbkdf2HashSize"]));
+            }
+            set {
+                this["Pbkdf2HashSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10000")]
+        public int Pbkdf2Iterations {
+            get {
+                return ((int)(this["Pbkdf2Iterations"]));
+            }
+            set {
+                this["Pbkdf2Iterations"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("$PFKDF2$V1$")]
+        public string Pbkdf2Prefix {
+            get {
+                return ((string)(this["Pbkdf2Prefix"]));
+            }
+            set {
+                this["Pbkdf2Prefix"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        public int Pbkdf2SaltSize {
+            get {
+                return ((int)(this["Pbkdf2SaltSize"]));
+            }
+            set {
+                this["Pbkdf2SaltSize"] = value;
             }
         }
     }

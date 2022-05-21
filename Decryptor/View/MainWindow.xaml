@@ -124,6 +124,9 @@
                 <MenuItem x:Name="miArgon2" 
                           Header="Argon2"
                           Click="HashMenuItem_Click"/>
+                <MenuItem x:Name="miPbkdf2"
+                          Header="PBKDF2"
+                          Click="HashMenuItem_Click"/>
                 <MenuItem x:Name="miMD5"
                           Header="MD5"
                           Click="HashMenuItem_Click"/>
