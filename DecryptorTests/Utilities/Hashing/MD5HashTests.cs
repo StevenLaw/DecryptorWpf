@@ -1,181 +1,181 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Decryptor.Core.Utilities.Hashing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Decryptor.Utilities.Hashing.Tests
+namespace DecryptorTests.Utilities.Hashing;
+
+[TestClass()]
+public class MD5HashTests
 {
-    [TestClass()]
-    public class MD5HashTests
+    private const string _failHash = "7ff3e75ce6aca348bc513ed3d5882946";
+    private const string _fileHash = "619e5ba661b4fc66002554a7b2eb731f";
+    private const string _filename = "Testing.txt";
+    private const string _resultHash = "636351fcb9197f5e75b845628508bbb1";
+    private const string _sample = "This is sample text";
+
+    [TestMethod()]
+    public async Task CheckFileHashAsyncTest()
     {
-        private const string failHash = "7ff3e75ce6aca348bc513ed3d5882946";
-        private const string fileHash = "619e5ba661b4fc66002554a7b2eb731f";
-        private const string filename = "Testing.txt";
-        private const string resultHash = "636351fcb9197f5e75b845628508bbb1";
-        private const string sample = "This is sample text";
+        // Arrange
+        var handler = new MD5Hash();
 
-        [TestMethod()]
-        public async Task CheckFileHashAsyncTest()
-        {
-            // Arrange
-            var handler = new MD5Hash();
+        // Act
+        bool matches = await handler.CheckFileHashAsync(_filename, _fileHash);
 
-            // Act
-            bool matches = await handler.CheckFileHashAsync(filename, fileHash);
+        // Assert
+        Assert.IsTrue(matches);
+    }
 
-            // Assert
-            Assert.IsTrue(matches);
-        }
+    [TestMethod]
+    public async Task CheckFileHashFailTest()
+    {
+        // Arrange
+        var handler = new MD5Hash();
 
-        [TestMethod]
-        public async Task CheckFileHashFailTest()
-        {
-            // Arrange
-            var handler = new MD5Hash();
+        // Act
+        bool matches = await handler.CheckFileHashAsync(_filename, _failHash);
 
-            // Act
-            bool matches = await handler.CheckFileHashAsync(filename, failHash);
+        // Assert
+        Assert.IsFalse(matches);
+    }
 
-            // Assert
-            Assert.IsFalse(matches);
-        }
+    [TestMethod()]
+    public async Task CheckHashAsyncStreamTest()
+    {
+        // Arrange
+        var handler = new MD5Hash();
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(_sample));
 
-        [TestMethod()]
-        public async Task CheckHashAsyncStreamTest()
-        {
-            // Arrange
-            var handler = new MD5Hash();
-            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(sample));
+        // Act
+        bool matches = await handler.CheckHashAsync(stream, _resultHash);
 
-            // Act
-            bool matches = await handler.CheckHashAsync(stream, resultHash);
+        // Assert
+        Assert.IsTrue(matches);
+    }
 
-            // Assert
-            Assert.IsTrue(matches);
-        }
+    [TestMethod()]
+    public async Task CheckHashAsyncTest()
+    {
+        // Arrange
+        var handler = new MD5Hash();
 
-        [TestMethod()]
-        public async Task CheckHashAsyncTest()
-        {
-            // Arrange
-            var handler = new MD5Hash();
+        // Act
+        bool matches = await handler.CheckHashAsync(_sample, _resultHash);
 
-            // Act
-            bool matches = await handler.CheckHashAsync(sample, resultHash);
+        // Assert
+        Assert.IsTrue(matches);
+    }
 
-            // Assert
-            Assert.IsTrue(matches);
-        }
+    [TestMethod]
+    public async Task CheckHashFailStreamTest()
+    {
+        // Arrange
+        var handler = new MD5Hash();
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(_sample));
 
-        [TestMethod]
-        public async Task CheckHashFailStreamTest()
-        {
-            // Arrange
-            var handler = new MD5Hash();
-            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(sample));
+        // Act
+        bool matches = await handler.CheckHashAsync(stream, _failHash);
 
-            // Act
-            bool matches = await handler.CheckHashAsync(stream, failHash);
+        // Assert
+        Assert.IsFalse(matches);
+    }
 
-            // Assert
-            Assert.IsFalse(matches);
-        }
+    [TestMethod]
+    public async Task CheckHashFailTest()
+    {
+        // Arrange
+        var handler = new MD5Hash();
 
-        [TestMethod]
-        public async Task CheckHashFailTest()
-        {
-            // Arrange
-            var handler = new MD5Hash();
+        // Act
+        bool matches = await handler.CheckHashAsync(_sample, _failHash);
 
-            // Act
-            bool matches = await handler.CheckHashAsync(sample, failHash);
+        // Assert
+        Assert.IsFalse(matches);
+    }
 
-            // Assert
-            Assert.IsFalse(matches);
-        }
+    [TestMethod]
+    public async Task GetAndCheckFileHashTest()
+    {
+        // Arrange
+        var handler = new MD5Hash();
 
-        [TestMethod]
-        public async Task GetAndCheckFileHashTest()
-        {
-            // Arrange
-            var handler = new MD5Hash();
+        // Act
+        string hash = await handler.GetFileHashAsync(_filename);
+        bool matches = await handler.CheckFileHashAsync(_filename, hash);
 
-            // Act
-            string hash = await handler.GetFileHashAsync(filename);
-            bool matches = await handler.CheckFileHashAsync(filename, hash);
+        // Assert
+        Assert.IsTrue(matches);
+    }
 
-            // Assert
-            Assert.IsTrue(matches);
-        }
+    [TestMethod]
+    public async Task GetAndCheckHashStreamTest()
+    {
+        // Arrange
+        var handler = new MD5Hash();
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(_sample));
 
-        [TestMethod]
-        public async Task GetAndCheckHashStreamTest()
-        {
-            // Arrange
-            var handler = new MD5Hash();
-            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(sample));
+        // Act
+        string hash = await handler.GetHashAsync(stream);
+        stream.Position = 0;
+        bool matches = await handler.CheckHashAsync(stream, hash);
 
-            // Act
-            string hash = await handler.GetHashAsync(stream);
-            stream.Position = 0;
-            bool matches = await handler.CheckHashAsync(stream, hash);
+        // Assert
+        Assert.IsTrue(matches);
+    }
 
-            // Assert
-            Assert.IsTrue(matches);
-        }
+    [TestMethod]
+    public async Task GetAndCheckHashTest()
+    {
+        // Arrange
+        var handler = new MD5Hash();
 
-        [TestMethod]
-        public async Task GetAndCheckHashTest()
-        {
-            // Arrange
-            var handler = new MD5Hash();
+        // Act
+        string hash = await handler.GetHashAsync(_sample);
+        bool matches = await handler.CheckHashAsync(_sample, hash);
 
-            // Act
-            string hash = await handler.GetHashAsync(sample);
-            bool matches = await handler.CheckHashAsync(sample, hash);
+        // Assert
+        Assert.IsTrue(matches);
+    }
 
-            // Assert
-            Assert.IsTrue(matches);
-        }
+    [TestMethod()]
+    public async Task GetFileHashAsyncTest()
+    {
+        // Arrange
+        var handler = new MD5Hash();
 
-        [TestMethod()]
-        public async Task GetFileHashAsyncTest()
-        {
-            // Arrange
-            var handler = new MD5Hash();
+        // Act
+        string hash = await handler.GetFileHashAsync(_filename);
 
-            // Act
-            string hash = await handler.GetFileHashAsync(filename);
+        // Assert
+        Assert.IsTrue(hash.Length > 0);
+    }
 
-            // Assert
-            Assert.IsTrue(hash.Length > 0);
-        }
+    [TestMethod()]
+    public async Task GetHashAsyncStreamTest()
+    {
+        // Arrange
+        var handler = new MD5Hash();
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(_sample));
 
-        [TestMethod()]
-        public async Task GetHashAsyncStreamTest()
-        {
-            // Arrange
-            var handler = new MD5Hash();
-            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(sample));
+        // Act
+        string hash = await handler.GetHashAsync(stream);
 
-            // Act
-            string hash = await handler.GetHashAsync(stream);
+        // Assert
+        Assert.IsTrue(hash.Length > 0);
+    }
 
-            // Assert
-            Assert.IsTrue(hash.Length > 0);
-        }
+    [TestMethod()]
+    public async Task GetHashAsyncTest()
+    {
+        // Arrange
+        var handler = new MD5Hash();
 
-        [TestMethod()]
-        public async Task GetHashAsyncTest()
-        {
-            // Arrange
-            var handler = new MD5Hash();
+        // Act
+        string hash = await handler.GetHashAsync(_sample);
 
-            // Act
-            string hash = await handler.GetHashAsync(sample);
-
-            // Assert
-            Assert.IsTrue(hash.Length > 0);
-        }
+        // Assert
+        Assert.IsTrue(hash.Length > 0);
     }
 }

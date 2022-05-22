@@ -1,190 +1,185 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Decryptor.Utilities.Hashing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Decryptor.Core.Utilities.Hashing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 
-namespace Decryptor.Utilities.Hashing.Tests
+namespace DecryptorTests.Utilities.Hashing;
+
+[TestClass()]
+public class Pbkdf2HashTests
 {
-    [TestClass()]
-    public class Pbkdf2HashTests
+    private const int _hashSize = 20;
+    private const int _iterations = 10000;
+    private const string _prefix = "$TEST$V1$";
+    private const int _saltSize = 16;
+    private const string _failHash = "$TEST$V1$10000$k3AF2eDUs/P7eTHWP1UPbZ8DEeROYxnAemGWlScnuxU3dq0S";
+    private const string _fileHash = "$TEST$V1$10000$r/FrbrwsQxTV/2oVG7hr+WtKkX3FJJ/lgLwLx8hjuCynNeB9";
+    private const string _filename = "Testing.txt";
+    private const string _resultHash = "$TEST$V1$10000$vv+lw9p6POPFCFqAKq3yjaY8RTldUJF/ANFLxYePJEfjSWYl";
+    private const string _sample = "This is sample text";
+
+    [TestMethod()]
+    public async Task CheckFileHashAsyncTest()
     {
-        private const string failHash = "$TEST$V1$10000$k3AF2eDUs/P7eTHWP1UPbZ8DEeROYxnAemGWlScnuxU3dq0S";
-        private const string fileHash = "$TEST$V1$10000$r/FrbrwsQxTV/2oVG7hr+WtKkX3FJJ/lgLwLx8hjuCynNeB9";
-        private const string filename = "Testing.txt";
-        private const string resultHash = "$TEST$V1$10000$vv+lw9p6POPFCFqAKq3yjaY8RTldUJF/ANFLxYePJEfjSWYl";
-        private const string sample = "This is sample text";
-        private const string _prefix = "$TEST$V1$";
-        private const int _saltSize = 16;
-        private const int _hashSize = 20;
-        private const int _iterations = 10000;
+        // Arrange
+        var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
+        // Act
+        bool matches = await handler.CheckFileHashAsync(_filename, _fileHash);
 
-        [TestMethod()]
-        public async Task CheckFileHashAsyncTest()
-        {
-            // Arrange
-            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
+        // Assert
+        Assert.IsTrue(matches);
+    }
 
-            // Act
-            bool matches = await handler.CheckFileHashAsync(filename, fileHash);
+    [TestMethod]
+    public async Task CheckFileHashFailTest()
+    {
+        // Arrange
+        var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
-            // Assert
-            Assert.IsTrue(matches);
-        }
+        // Act
+        bool matches = await handler.CheckFileHashAsync(_filename, _failHash);
 
-        [TestMethod]
-        public async Task CheckFileHashFailTest()
-        {
-            // Arrange
-            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
+        // Assert
+        Assert.IsFalse(matches);
+    }
 
-            // Act
-            bool matches = await handler.CheckFileHashAsync(filename, failHash);
+    [TestMethod()]
+    public async Task CheckHashAsyncStreamTest()
+    {
+        // Arrange
+        var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(_sample));
 
-            // Assert
-            Assert.IsFalse(matches);
-        }
+        // Act
+        bool matches = await handler.CheckHashAsync(stream, _resultHash);
 
-        [TestMethod()]
-        public async Task CheckHashAsyncStreamTest()
-        {
-            // Arrange
-            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
-            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(sample));
+        // Assert
+        Assert.IsTrue(matches);
+    }
 
-            // Act
-            bool matches = await handler.CheckHashAsync(stream, resultHash);
+    [TestMethod()]
+    public async Task CheckHashAsyncTest()
+    {
+        // Arrange
+        var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
-            // Assert
-            Assert.IsTrue(matches);
-        }
+        // Act
+        bool matches = await handler.CheckHashAsync(_sample, _resultHash);
 
-        [TestMethod()]
-        public async Task CheckHashAsyncTest()
-        {
-            // Arrange
-            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
+        // Assert
+        Assert.IsTrue(matches);
+    }
 
-            // Act
-            bool matches = await handler.CheckHashAsync(sample, resultHash);
+    [TestMethod]
+    public async Task CheckHashFailStreamTest()
+    {
+        // Arrange
+        var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(_sample));
 
-            // Assert
-            Assert.IsTrue(matches);
-        }
+        // Act
+        bool matches = await handler.CheckHashAsync(stream, _failHash);
 
-        [TestMethod]
-        public async Task CheckHashFailStreamTest()
-        {
-            // Arrange
-            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
-            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(sample));
+        // Assert
+        Assert.IsFalse(matches);
+    }
 
-            // Act
-            bool matches = await handler.CheckHashAsync(stream, failHash);
+    [TestMethod]
+    public async Task CheckHashFailTest()
+    {
+        // Arrange
+        var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
-            // Assert
-            Assert.IsFalse(matches);
-        }
+        // Act
+        bool matches = await handler.CheckHashAsync(_sample, _failHash);
 
-        [TestMethod]
-        public async Task CheckHashFailTest()
-        {
-            // Arrange
-            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
+        // Assert
+        Assert.IsFalse(matches);
+    }
 
-            // Act
-            bool matches = await handler.CheckHashAsync(sample, failHash);
+    [TestMethod]
+    public async Task GetAndCheckFileHashTest()
+    {
+        // Arrange
+        var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
-            // Assert
-            Assert.IsFalse(matches);
-        }
+        // Act
+        string hash = await handler.GetFileHashAsync(_filename);
+        bool matches = await handler.CheckFileHashAsync(_filename, hash);
 
-        [TestMethod]
-        public async Task GetAndCheckFileHashTest()
-        {
-            // Arrange
-            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
+        // Assert
+        Assert.IsTrue(matches);
+    }
 
-            // Act
-            string hash = await handler.GetFileHashAsync(filename);
-            bool matches = await handler.CheckFileHashAsync(filename, hash);
+    [TestMethod]
+    public async Task GetAndCheckHashStreamTest()
+    {
+        // Arrange
+        var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(_sample));
 
-            // Assert
-            Assert.IsTrue(matches);
-        }
+        // Act
+        string hash = await handler.GetHashAsync(stream);
+        stream.Position = 0;
+        bool matches = await handler.CheckHashAsync(stream, hash);
 
-        [TestMethod]
-        public async Task GetAndCheckHashStreamTest()
-        {
-            // Arrange
-            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
-            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(sample));
+        // Assert
+        Assert.IsTrue(matches);
+    }
 
-            // Act
-            string hash = await handler.GetHashAsync(stream);
-            stream.Position = 0;
-            bool matches = await handler.CheckHashAsync(stream, hash);
+    [TestMethod]
+    public async Task GetAndCheckHashTest()
+    {
+        // Arrange
+        var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
-            // Assert
-            Assert.IsTrue(matches);
-        }
+        // Act
+        string hash = await handler.GetHashAsync(_sample);
+        bool matches = await handler.CheckHashAsync(_sample, hash);
 
-        [TestMethod]
-        public async Task GetAndCheckHashTest()
-        {
-            // Arrange
-            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
+        // Assert
+        Assert.IsTrue(matches);
+    }
 
-            // Act
-            string hash = await handler.GetHashAsync(sample);
-            bool matches = await handler.CheckHashAsync(sample, hash);
+    [TestMethod()]
+    public async Task GetFileHashAsyncTest()
+    {
+        // Arrange
+        var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
-            // Assert
-            Assert.IsTrue(matches);
-        }
+        // Act
+        string hash = await handler.GetFileHashAsync(_filename);
 
-        [TestMethod()]
-        public async Task GetFileHashAsyncTest()
-        {
-            // Arrange
-            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
+        // Assert
+        Assert.IsTrue(hash.Length > 0);
+    }
 
-            // Act
-            string hash = await handler.GetFileHashAsync(filename);
+    [TestMethod()]
+    public async Task GetHashAsyncStreamTest()
+    {
+        // Arrange
+        var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(_sample));
 
-            // Assert
-            Assert.IsTrue(hash.Length > 0);
-        }
+        // Act
+        string hash = await handler.GetHashAsync(stream);
 
-        [TestMethod()]
-        public async Task GetHashAsyncStreamTest()
-        {
-            // Arrange
-            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
-            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(sample));
+        // Assert
+        Assert.IsTrue(hash.Length > 0);
+    }
 
-            // Act
-            string hash = await handler.GetHashAsync(stream);
+    [TestMethod()]
+    public async Task GetHashAsyncTest()
+    {
+        // Arrange
+        var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
 
-            // Assert
-            Assert.IsTrue(hash.Length > 0);
-        }
+        // Act
+        string hash = await handler.GetHashAsync(_sample);
 
-        [TestMethod()]
-        public async Task GetHashAsyncTest()
-        {
-            // Arrange
-            var handler = new Pbkdf2Hash(_iterations, _saltSize, _hashSize, _prefix);
-
-            // Act
-            string hash = await handler.GetHashAsync(sample);
-
-            // Assert
-            Assert.IsTrue(hash.Length > 0);
-        }
+        // Assert
+        Assert.IsTrue(hash.Length > 0);
     }
 }
