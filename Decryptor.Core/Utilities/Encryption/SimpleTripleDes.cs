@@ -57,8 +57,13 @@ public class SimpleTripleDes : ISimpleEncryption
                                         des.CreateDecryptor(),
                                         CryptoStreamMode.Read);
         byte[] fromEncrypt = new byte[cypherStream.Length];
-        await cs.ReadAsync(fromEncrypt.AsMemory(0, fromEncrypt.Length));
-
+        int num = 0;
+        while (num < fromEncrypt.Length)
+        {
+            int bytesRead = await cs.ReadAsync(fromEncrypt.AsMemory(num, fromEncrypt.Length - num));
+            if (bytesRead == 0) break;
+            num += bytesRead;
+        }
         cs.Close();
         return TrimNullByte(fromEncrypt);
     }

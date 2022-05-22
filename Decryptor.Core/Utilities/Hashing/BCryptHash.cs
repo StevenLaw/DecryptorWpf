@@ -1,5 +1,5 @@
 ﻿using Decryptor.Core.Interfaces;
-using DevOne.Security.Cryptography.BCrypt;
+using Bc = BCrypt.Net;
 using System.Text;
 
 namespace Decryptor.Core.Utilities.Hashing;
@@ -19,7 +19,7 @@ public class BCryptHash : IHash
         string clearText = Encoding.Default.GetString(bytes);
         try
         {
-            return BCryptHelper.CheckPassword(clearText, hash);
+            return Bc.BCrypt.Verify(clearText, hash);
         }
         catch (ArgumentException)
         {
@@ -31,7 +31,7 @@ public class BCryptHash : IHash
     {
         try
         {
-            return Task.Run(() => BCryptHelper.CheckPassword(clearText, hash));
+            return Task.Run(() => Bc.BCrypt.Verify(clearText, hash));
         }
         catch (ArgumentException)
         {
@@ -46,7 +46,7 @@ public class BCryptHash : IHash
         var clearText = Encoding.Default.GetString(ms.ToArray());
         try
         {
-            return BCryptHelper.CheckPassword(clearText, hash);
+            return Bc.BCrypt.Verify(clearText, hash);
         }
         catch (ArgumentException)
         {
@@ -57,23 +57,23 @@ public class BCryptHash : IHash
     public async Task<string> GetFileHashAsync(string filename)
     {
         var bytes = await File.ReadAllBytesAsync(filename);
-        string salt = BCryptHelper.GenerateSalt(_workFactor);
+        string salt = Bc.BCrypt.GenerateSalt(_workFactor);
         var clearText = Encoding.Default.GetString(bytes);
-        return BCryptHelper.HashPassword(clearText, salt);
+        return Bc.BCrypt.HashPassword(clearText, salt);
     }
 
     public Task<string> GetHashAsync(string clearText)
     {
-        string salt = BCryptHelper.GenerateSalt(_workFactor);
-        return Task.Run(() => BCryptHelper.HashPassword(clearText, salt));
+        string salt = Bc.BCrypt.GenerateSalt(_workFactor);
+        return Task.Run(() => Bc.BCrypt.HashPassword(clearText, salt));
     }
 
     public async Task<string> GetHashAsync(Stream stream)
     {
         using var ms = new MemoryStream();
         await stream.CopyToAsync(ms);
-        string salt = BCryptHelper.GenerateSalt(_workFactor);
+        string salt = Bc.BCrypt.GenerateSalt(_workFactor);
         var clearText = Encoding.Default.GetString(ms.ToArray());
-        return BCryptHelper.HashPassword(clearText, salt);
+        return Bc.BCrypt.HashPassword(clearText, salt);
     }
 }

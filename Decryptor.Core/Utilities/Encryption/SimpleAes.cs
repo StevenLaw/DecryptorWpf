@@ -2,6 +2,7 @@
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
+using System;
 
 namespace Decryptor.Core.Utilities.Encryption;
 
@@ -53,6 +54,13 @@ public class SimpleAes : ISimpleEncryption
                                         aes.CreateDecryptor(),
                                         CryptoStreamMode.Read);
         byte[] fromEncrypt = new byte[cypherStream.Length];
+        int num = 0;
+        while (num < fromEncrypt.Length)
+        {
+            int bytesRead = await cs.ReadAsync(fromEncrypt.AsMemory(num, fromEncrypt.Length - num));
+            if (bytesRead == 0) break;
+            num += bytesRead;
+        }
         await cs.ReadAsync(fromEncrypt.AsMemory(0, fromEncrypt.Length));
         cs.Close();
         return TrimNullByte(fromEncrypt);
