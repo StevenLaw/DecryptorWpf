@@ -1,4 +1,4 @@
-﻿using Decryptor.Utilities;
+﻿using Decryptor.Core.Utilities;
 using System.Security;
 using System.Windows;
 using System.Windows.Controls;

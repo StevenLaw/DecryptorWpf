@@ -1,10 +1,8 @@
-﻿using Decryptor.Enums;
-using Decryptor.Utilities.Encryption;
+﻿using Decryptor.Core.Enums;
+using Decryptor.Core.Utilities.Encryption;
 using Decryptor.ViewModel;
 using Microsoft.Win32;
 using System;
-using System.Globalization;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;

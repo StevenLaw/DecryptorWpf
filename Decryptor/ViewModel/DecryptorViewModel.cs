@@ -1,11 +1,12 @@
-﻿using Decryptor.Enums;
+﻿using Decryptor.Core.Enums;
+using Decryptor.Core.Utilities;
+using Decryptor.Core.Utilities.Encryption;
+using Decryptor.Core.Utilities.Hashing;
 using Decryptor.Utilities;
-using Decryptor.Utilities.Encryption;
 using Decryptor.ViewModel.Commands;
 using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security;
 
@@ -343,6 +344,11 @@ namespace Decryptor.ViewModel
         #region ctor
         public DecryptorViewModel()
         {
+            // Initialize settings and factory
+            Settings = new();
+            EncryptionFactory = new(Settings);
+            HashFactory = new(Settings);
+
             // Initialize commands
             CheckHashCommand = new CheckHashCommand(this);
             ClearCommand = new ClearCommand(this);
@@ -361,6 +367,10 @@ namespace Decryptor.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
 
+        public Settings Settings { get; }
+        public EncryptionFactory EncryptionFactory { get; }
+        public HashFactory HashFactory { get; }
+
         public void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             if (propertyName != null)
@@ -371,24 +381,25 @@ namespace Decryptor.ViewModel
 
         public void LoadSettings()
         {
-            Key = PasswordProtector.DecryptString(Properties.Settings.Default.Key);
-            WorkFactor = Properties.Settings.Default.BCryptWorkFactor;
-            HashAlgorithm = (HashAlgorithm)Properties.Settings.Default.HashAlgorithm;
-            EncryptionAlgorithm = (EncryptionAlgorithm)Properties.Settings.Default.EncryptionAlgorithm;
-            ScryptIterations = Properties.Settings.Default.ScryptIterationCount;
-            BlockCount = Properties.Settings.Default.ScryptBlockCount;
-            ThreadCount = Properties.Settings.Default.ScryptThreadCount;
-            DegreesOfParallelism = Properties.Settings.Default.Argon2DegreesOfParallelism;
-            Argon2Iterations = Properties.Settings.Default.Argon2Iterations;
-            MemorySize = Properties.Settings.Default.Argon2MemorySize;
-            Argon2SaltLength = Properties.Settings.Default.Argon2SaltLength;
-            Argon2HashLength = Properties.Settings.Default.Argon2HashLength;
-            TripleDesKeySize tDesKeySize = (TripleDesKeySize)Properties.Settings.Default.TripleDesKeySize;
+            Settings.Load();
+            Key = PasswordProtector.DecryptString(Settings.Key);
+            WorkFactor = Settings.BCryptWorkFactor;
+            HashAlgorithm = Settings.HashAlgorithm;
+            EncryptionAlgorithm = Settings.EncryptionAlgorithm;
+            ScryptIterations = Settings.ScryptIterations;
+            BlockCount = Settings.ScryptBlockCount;
+            ThreadCount = Settings.ScryptThreadCount;
+            DegreesOfParallelism = Settings.Argon2DegreesOfParallelism;
+            Argon2Iterations = Settings.Argon2Iterations;
+            MemorySize = Settings.Argon2MemorySize;
+            Argon2SaltLength = Settings.Argon2SaltLength;
+            Argon2HashLength = Settings.Argon2HashLength;
+            TripleDesKeySize tDesKeySize = Settings.TripleDesKeySize;
             SelectedTripleDesKeySize = tDesKeySize.GetDisplayString();
-            Pbkdf2HashSize = Properties.Settings.Default.Pbkdf2HashSize;
-            Pbkdf2Iterations = Properties.Settings.Default.Pbkdf2Iterations;
-            Pbkdf2Prefix = Properties.Settings.Default.Pbkdf2Prefix;
-            Pbkdf2SaltSize = Properties.Settings.Default.Pbkdf2SaltSize;
+            Pbkdf2HashSize = Settings.Pbkdf2HashSize;
+            Pbkdf2Iterations = Settings.Pbkdf2Iterations;
+            Pbkdf2Prefix = Settings.Pbkdf2Prefix;
+            Pbkdf2SaltSize = Settings.Pbkdf2SaltSize;
 
             DecryptCommand.RaiseCanExecuteChanged();
             EncryptCommand.RaiseCanExecuteChanged();
@@ -396,24 +407,24 @@ namespace Decryptor.ViewModel
 
         public void SaveSettings()
         {
-            Properties.Settings.Default.Key = PasswordProtector.GetEncryptedString(Key);
-            Properties.Settings.Default.BCryptWorkFactor = WorkFactor;
-            Properties.Settings.Default.HashAlgorithm = (byte)HashAlgorithm;
-            Properties.Settings.Default.ScryptIterationCount = ScryptIterations;
-            Properties.Settings.Default.ScryptBlockCount = BlockCount;
-            Properties.Settings.Default.ScryptThreadCount = ThreadCount;
-            Properties.Settings.Default.Argon2DegreesOfParallelism = DegreesOfParallelism;
-            Properties.Settings.Default.Argon2Iterations = Argon2Iterations;
-            Properties.Settings.Default.Argon2MemorySize = MemorySize;
-            Properties.Settings.Default.Argon2SaltLength = Argon2SaltLength;
-            Properties.Settings.Default.Argon2HashLength = Argon2HashLength;
+            Settings.Key = PasswordProtector.GetEncryptedString(Key);
+            Settings.BCryptWorkFactor = WorkFactor;
+            Settings.HashAlgorithm = HashAlgorithm;
+            Settings.ScryptIterations = ScryptIterations;
+            Settings.ScryptBlockCount = BlockCount;
+            Settings.ScryptThreadCount = ThreadCount;
+            Settings.Argon2DegreesOfParallelism = DegreesOfParallelism;
+            Settings.Argon2Iterations = Argon2Iterations;
+            Settings.Argon2MemorySize = MemorySize;
+            Settings.Argon2SaltLength = Argon2SaltLength;
+            Settings.Argon2HashLength = Argon2HashLength;
             TripleDesKeySize tDesKeySize = TripleDesUtil.Parse(SelectedTripleDesKeySize);
-            Properties.Settings.Default.TripleDesKeySize = (byte)tDesKeySize;
-            Properties.Settings.Default.Pbkdf2HashSize = Pbkdf2HashSize;
-            Properties.Settings.Default.Pbkdf2Iterations = Pbkdf2Iterations;
-            Properties.Settings.Default.Pbkdf2Prefix = Pbkdf2Prefix;
-            Properties.Settings.Default.Pbkdf2SaltSize = Pbkdf2SaltSize;
-            Properties.Settings.Default.Save();
+            Settings.TripleDesKeySize = tDesKeySize;
+            Settings.Pbkdf2HashSize = Pbkdf2HashSize;
+            Settings.Pbkdf2Iterations = Pbkdf2Iterations;
+            Settings.Pbkdf2Prefix = Pbkdf2Prefix;
+            Settings.Pbkdf2SaltSize = Pbkdf2SaltSize;
+            Settings.Save();
 
             DecryptCommand.RaiseCanExecuteChanged();
             EncryptCommand.RaiseCanExecuteChanged();

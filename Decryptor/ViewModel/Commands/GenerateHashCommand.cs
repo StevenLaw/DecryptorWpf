@@ -1,5 +1,6 @@
-﻿using Decryptor.Utilities;
-using Decryptor.Utilities.Hashing;
+﻿using Decryptor.Core.Enums;
+using Decryptor.Core.Utilities;
+using Decryptor.Core.Utilities.Hashing;
 using System;
 using System.IO;
 using System.Windows.Input;
@@ -30,8 +31,8 @@ namespace Decryptor.ViewModel.Commands
         {
             return VM.ModeEnum switch
             {
-                Enums.Modes.Text => VM.PasswordLength > 0,
-                Enums.Modes.File => !string.IsNullOrWhiteSpace(VM.Filename),
+                Modes.Text => VM.PasswordLength > 0,
+                Modes.File => !string.IsNullOrWhiteSpace(VM.Filename),
                 _ => throw new NotImplementedException(),
             };
         }
@@ -39,13 +40,13 @@ namespace Decryptor.ViewModel.Commands
         public async void Execute(object parameter)
         {
             VM.IsBusy = true;
-            var hash = HashFactory.Create(VM.HashAlgorithm);
+            var hash = VM.HashFactory.Create(VM.HashAlgorithm);
             try
             {
                 VM.Result = VM.ModeEnum switch
                 {
-                    Enums.Modes.Text => await hash.GetHashAsync(VM.Password.ToInsecureString()),
-                    Enums.Modes.File => await hash.GetFileHashAsync(VM.Filename),
+                    Modes.Text => await hash.GetHashAsync(VM.Password.ToInsecureString()),
+                    Modes.File => await hash.GetFileHashAsync(VM.Filename),
                     _ => throw new NotImplementedException(),
                 };
             }

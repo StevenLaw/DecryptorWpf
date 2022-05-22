@@ -11,25 +11,25 @@ namespace Decryptor.View
     /// </summary>
     public partial class SettingsWindow : Window
     {
-        private readonly DecryptorViewModel vm;
+        private readonly DecryptorViewModel _vm;
 
         public SettingsWindow()
         {
             InitializeComponent();
 
-            vm = DataContext as DecryptorViewModel;
+            _vm = DataContext as DecryptorViewModel;
             ccSettings.Content = new GeneralEncryptionView();
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            vm.SaveSettings();
+            _vm.SaveSettings();
             Close();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            vm.LoadSettings();
+            _vm.LoadSettings();
             Close();
         }
 
