@@ -25,8 +25,8 @@ public class PasswordProtectorTests
     public void EncryptThenDecryptStringTest()
     {
         // Act
-        string encrypted = PasswordProtector.GetEncryptedString(_secureSample);
-        var decrypted = PasswordProtector.DecryptString(encrypted);
+        string encrypted = PasswordUtilities.GetEncryptedString(_secureSample);
+        var decrypted = PasswordUtilities.DecryptString(encrypted);
         Debug.WriteLine(encrypted);
 
         // Assert

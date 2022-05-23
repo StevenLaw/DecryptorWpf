@@ -15,7 +15,7 @@ public class EncryptionFactory : IEncryptionFactory
 
     public ISimpleEncryption Create(EncryptionAlgorithm algorithm)
     {
-        SecureString key = PasswordProtector.DecryptString(_settings.Key);
+        SecureString key = PasswordUtilities.DecryptString(_settings.Key);
         var tripleDesKeySize = _settings.TripleDesKeySize;
         return algorithm switch
         {

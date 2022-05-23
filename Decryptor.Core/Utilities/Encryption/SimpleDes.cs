@@ -9,7 +9,7 @@ namespace Decryptor.Core.Utilities.Encryption;
 public class SimpleDes : ISimpleEncryption
 {
     private const int _keyIVSize = 8;
-    private readonly SecureString _encryptionKey = PasswordProtector.ToSecureString(string.Empty);
+    private readonly SecureString _encryptionKey = PasswordUtilities.ToSecureString(string.Empty);
 
     private readonly byte[] _salt = new byte[]
     {

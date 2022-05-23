@@ -1,12 +1,26 @@
-﻿using System.Runtime.InteropServices;
+﻿using Decryptor.Core.Interfaces;
+using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace Decryptor.Core.Utilities;
 
+//TODO replace this with better code.
+public class PasswordProtectorInterim : IPasswordProtector
+{
+    public string DecryptString(string encryptedText)
+    {
+        return PasswordUtilities.DecryptString(encryptedText).ToInsecureString();
+    }
+
+    public string EncryptString(string clearText)
+    {
+        return PasswordUtilities.GetEncryptedString(clearText.ToSecureString());
+    }
+}
 #pragma warning disable CA1416 // Validate platform compatibility
-public static class PasswordProtector
+public static class PasswordUtilities
 {
     private static readonly byte[] _entropy = Encoding.UTF8.GetBytes(":D(r>N7^&oCs;b^~3+[=33]NiakD7]J2[aEDlmIu`[hNRM/#KnbxCq:Nhps@!WW");
 

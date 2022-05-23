@@ -382,7 +382,7 @@ namespace Decryptor.ViewModel
         public void LoadSettings()
         {
             Settings.Load();
-            Key = PasswordProtector.DecryptString(Settings.Key);
+            Key = PasswordUtilities.DecryptString(Settings.Key);
             WorkFactor = Settings.BCryptWorkFactor;
             HashAlgorithm = Settings.HashAlgorithm;
             EncryptionAlgorithm = Settings.EncryptionAlgorithm;
@@ -407,7 +407,7 @@ namespace Decryptor.ViewModel
 
         public void SaveSettings()
         {
-            Settings.Key = PasswordProtector.GetEncryptedString(Key);
+            Settings.Key = PasswordUtilities.GetEncryptedString(Key);
             Settings.BCryptWorkFactor = WorkFactor;
             Settings.HashAlgorithm = HashAlgorithm;
             Settings.ScryptIterations = ScryptIterations;
