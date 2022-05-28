@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Decryptor.WinUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Decryptor.WinUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

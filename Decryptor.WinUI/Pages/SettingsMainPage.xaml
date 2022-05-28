@@ -1,0 +1,82 @@
+﻿<Page
+    x:Class="Decryptor.WinUI.Pages.SettingsMainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Decryptor.WinUI.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Margin="5"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <NavigationView
+            x:Name="SettingsNavView"
+            ItemInvoked="SettingsNavView_ItemInvoked"
+            Loaded="SettingsNavView_Loaded"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Encryption"
+                                    ToolTipService.ToolTip="Encryption"
+                                    SelectsOnInvoked="False"
+                                    IsExpanded="True">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72E;"/>
+                    </NavigationViewItem.Icon>
+                    <NavigationViewItem.MenuItems>
+                        <NavigationViewItem Content="General" 
+                                            x:Name="General"
+                                            Tag="general"
+                                            IsSelected="True"/>
+                        <NavigationViewItem Content="Triple DES" 
+                                            x:Name="TripleDES"
+                                            Tag="tripledes"/>
+                    </NavigationViewItem.MenuItems>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Hashing"
+                                    ToolTipService.ToolTip="Hashing"
+                                    SelectsOnInvoked="False"
+                                    IsExpanded="True">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="#"/>
+                    </NavigationViewItem.Icon>
+                    <NavigationViewItem.MenuItems>
+                        <NavigationViewItem Content="BCrypt" 
+                                            x:Name="BCrypt"
+                                            Tag="bcrypt"/>
+                        <NavigationViewItem Content="Scrypt" 
+                                            x:Name="Scrypt"
+                                            Tag="scrypt"/>
+                        <NavigationViewItem Content="Argon2" 
+                                            x:Name="Argon2"
+                                            Tag="argon2"/>
+                        <NavigationViewItem Content="PBKDF2" 
+                                            x:Name="PBKDF2"
+                                            Tag="pbkdf2"/>
+                    </NavigationViewItem.MenuItems>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Frame x:Name="ContentFrame">
+                    <Frame.ContentTransitions>
+                        <TransitionCollection>
+                            <NavigationThemeTransition/>
+                        </TransitionCollection>
+                    </Frame.ContentTransitions>
+                </Frame>
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Grid.Row="1">
+                    <Button Content="Save"/>
+                    <Button Content="Cancel"/>
+                </StackPanel>
+            </Grid>
+        </NavigationView>
+    </Grid>
+</Page>
