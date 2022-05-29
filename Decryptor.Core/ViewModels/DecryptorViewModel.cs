@@ -23,6 +23,7 @@ namespace Decryptor.Core.ViewModels
         private string _checksum = string.Empty;
         private string _filename = string.Empty;
         private bool _isBusy;
+        [AlsoNotifyChangeFor(nameof(ModeEnum))]
         private int _mode;
         private string _outputFile = string.Empty;
         private string _password = string.Empty;
@@ -33,13 +34,21 @@ namespace Decryptor.Core.ViewModels
         public bool? CheckSucceeded
         {
             get => _checkSucceeded;
-            set => SetProperty(ref _checkSucceeded, value);
+            set
+            {
+                SetProperty(ref _checkSucceeded, value);
+                ClearCommand.NotifyCanExecuteChanged();
+            }
         }
 
         public string Checksum
         {
             get => _checksum;
-            set => SetProperty(ref _checksum, value);
+            set
+            {
+                SetProperty(ref _checksum, value);
+                CheckHashCommand.NotifyCanExecuteChanged();
+            }
         }
 
         public string Filename
@@ -49,6 +58,10 @@ namespace Decryptor.Core.ViewModels
             {
                 SetProperty(ref _filename, value);
                 SuggestOutputFilename(value);
+                CheckHashCommand.NotifyCanExecuteChanged();
+                DecryptCommand.NotifyCanExecuteChanged();
+                EncryptCommand.NotifyCanExecuteChanged();
+                GenerateHashCommand.NotifyCanExecuteChanged();
             }
         }
 
@@ -63,7 +76,12 @@ namespace Decryptor.Core.ViewModels
         public int Mode
         {
             get => _mode;
-            set => SetProperty(ref _mode, value);
+            set
+            {
+                SetProperty(ref _mode, value);
+                DecryptCommand.NotifyCanExecuteChanged();
+                EncryptCommand.NotifyCanExecuteChanged();
+            }
         }
 
         public Modes ModeEnum => (Modes)_mode;
@@ -71,24 +89,45 @@ namespace Decryptor.Core.ViewModels
         public string OutputFile
         {
             get => _outputFile;
-            set => SetProperty(ref _outputFile, value);
+            set
+            {
+                SetProperty(ref _outputFile, value);
+                DecryptCommand.NotifyCanExecuteChanged();
+                EncryptCommand.NotifyCanExecuteChanged();
+            }
         }
 
         public string Password
         {
             get => _password;
-            set => SetProperty(ref _password, value);
+            set
+            {
+                SetProperty(ref _password, value);
+                CheckHashCommand.NotifyCanExecuteChanged();
+                GenerateHashCommand.NotifyCanExecuteChanged();
+            }
         }
 
         public string Result
         {
             get => _result;
-            set => SetProperty(ref _result, value);
+            set
+            {
+                SetProperty(ref _result, value);
+                CopyCommand.NotifyCanExecuteChanged();
+                ClearCommand.NotifyCanExecuteChanged();
+            }
         }
         public string Text
         {
             get => _text;
-            set => SetProperty(ref _text, value);
+            set 
+            {
+                SetProperty(ref _text, value);
+                CheckHashCommand.NotifyCanExecuteChanged();
+                DecryptCommand.NotifyCanExecuteChanged();
+                EncryptCommand.NotifyCanExecuteChanged();
+            }
         }
         #endregion
 
@@ -119,6 +158,7 @@ namespace Decryptor.Core.ViewModels
         {
             // Initialize Injectables
             Settings = settings;
+            Settings.Load();
             EncryptionFactory = encryptionFactory;
             HashFactory = hashFactory;
             ClipboardManager = clipboardManager;
@@ -126,9 +166,9 @@ namespace Decryptor.Core.ViewModels
             PasswordProtector = passwordProtector;
 
             // Initialize Commands
-            CheckHashCommand = new AsyncRelayCommand(CheckHashExecute, CheckHasCanExecute);
+            CheckHashCommand = new AsyncRelayCommand(CheckHashExecute, CheckHashCanExecute);
             ClearCommand = new RelayCommand(ClearExecute, ClearCanExecute);
-            CopyCommand = new RelayCommand(OnCopy, CopyCanExecute);
+            CopyCommand = new RelayCommand(CopyExecute, CopyCanExecute);
             DecryptCommand = new AsyncRelayCommand(DecryptExecute, DecryptCanExecute);
             EncryptCommand = new AsyncRelayCommand(EncryptExecute, EncryptCanExecute);
             GenerateHashCommand = new AsyncRelayCommand(GenerateHashExecute, GenerateHashCanExecute);
@@ -140,7 +180,7 @@ namespace Decryptor.Core.ViewModels
             Messenger.Register<DecryptorViewModel, SettingsChangedMessage>(this, (r, m) => OnPropertyChanged(nameof(Key)));
         }
 
-        private bool CheckHasCanExecute()
+        private bool CheckHashCanExecute()
         {
             return ModeEnum switch
             {
@@ -166,6 +206,10 @@ namespace Decryptor.Core.ViewModels
             catch (FileNotFoundException ex)
             {
                 await AlertService.ShowError($"Couldn't find file {Filename}", "File not found", ex);
+            }
+            catch (Exception ex)
+            {
+                await AlertService.ShowError("Unexpected Error", "Error", ex);
             }
             finally
             {
@@ -301,7 +345,7 @@ namespace Decryptor.Core.ViewModels
                 throw;
             }
         }
-        private void OnCopy()
+        private void CopyExecute()
         {
             ClipboardManager.SetText(Result);
         }

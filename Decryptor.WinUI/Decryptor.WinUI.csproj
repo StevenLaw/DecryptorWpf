@@ -10,6 +10,7 @@
     <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+    <ApplicationIcon>Assets\BlueKey.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Pages\FilePage.xaml" />
@@ -21,6 +22,7 @@
     <None Remove="Pages\SettingsPages\ScryptPage.xaml" />
     <None Remove="Pages\SettingsPages\TripleDesPage.xaml" />
     <None Remove="Pages\TextPage.xaml" />
+    <None Remove="UserControls\SuccessIndicator.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,8 +36,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -44,6 +47,17 @@
        package has not yet been restored -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnablePreviewMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Decryptor.Core\Decryptor.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\BlueKey.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Assets\BlueKey.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\SettingsPages\Pbkdf2Page.xaml">
@@ -87,6 +101,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\SettingsPages\GeneralEncryptionPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\SuccessIndicator.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

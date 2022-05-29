@@ -1,6 +1,7 @@
 ﻿using Decryptor.Core.Interfaces;
 using Bc = BCrypt.Net;
 using System.Text;
+using BCrypt.Net;
 
 namespace Decryptor.Core.Utilities.Hashing;
 
@@ -21,6 +22,10 @@ public class BCryptHash : IHash
         {
             return Bc.BCrypt.Verify(clearText, hash);
         }
+        catch (SaltParseException)
+        {
+            return false;
+        }
         catch (ArgumentException)
         {
             return false;
@@ -32,6 +37,10 @@ public class BCryptHash : IHash
         try
         {
             return Task.Run(() => Bc.BCrypt.Verify(clearText, hash));
+        }
+        catch (SaltParseException)
+        {
+            return Task.FromResult(false);
         }
         catch (ArgumentException)
         {
@@ -47,6 +56,10 @@ public class BCryptHash : IHash
         try
         {
             return Bc.BCrypt.Verify(clearText, hash);
+        }
+        catch (SaltParseException)
+        {
+            return false;
         }
         catch (ArgumentException)
         {

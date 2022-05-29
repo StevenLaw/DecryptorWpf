@@ -5,6 +5,7 @@
     xmlns:local="using:Decryptor.WinUI.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="using:Decryptor.WinUI.UserControls"
     mc:Ignorable="d"
     Margin="5"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -20,20 +21,25 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         
-        <TextBox Grid.ColumnSpan="4"/>
+        <TextBox Text="{x:Bind ViewModel.Text, Mode=TwoWay}"
+                 Grid.ColumnSpan="4"/>
         
         <TextBlock Text="Password"
                    Style="{StaticResource Label}"
                    Grid.Column="0"
                    Grid.Row="1"/>
-        <PasswordBox Grid.Column="1"
+        <PasswordBox Password="{x:Bind ViewModel.Password, Mode=TwoWay}"
+                     Grid.Column="1"
                      Grid.Row="1"/>
         <Button Content="Encrypt"
+                Command="{x:Bind ViewModel.EncryptCommand}"
                 Grid.Column="2"
                 Grid.Row="1"/>
         <Button Content="Decrypt"
+                Command="{x:Bind ViewModel.DecryptCommand}"
                 Grid.Column="3"
                 Grid.Row="1"/>
         
@@ -41,10 +47,38 @@
                   Grid.ColumnSpan="2"
                   Grid.Row="2"/>-->
         <Button Content="Hash"
+                Command="{x:Bind ViewModel.GenerateHashCommand}"
                 Grid.Column="2"
                 Grid.Row="2"/>
         <Button Content="Check"
+                Command="{x:Bind ViewModel.CheckHashCommand}"
                 Grid.Column="3"
                 Grid.Row="2"/>
+
+        <Grid Grid.ColumnSpan="4"
+              Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{x:Bind ViewModel.Result, Mode=OneWay}"
+                       HorizontalAlignment="Stretch"/>
+            <uc:SuccessIndicator Success="{x:Bind ViewModel.CheckSucceeded, Mode=TwoWay}"
+                                 Grid.Column="1"/>
+            <Button Command="{x:Bind ViewModel.CopyCommand}"
+                    Grid.Column="2">
+                <Button.Content>
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;"/>
+                </Button.Content>
+            </Button>
+            <Button Command="{x:Bind ViewModel.ClearCommand}"
+                    Grid.Column="3">
+                <Button.Content>
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE75C;"/>
+                </Button.Content>
+            </Button>
+        </Grid>
     </Grid>
 </Page>

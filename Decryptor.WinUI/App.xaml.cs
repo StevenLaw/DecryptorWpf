@@ -1,4 +1,12 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Decryptor.Core.Interfaces;
+using Decryptor.Core.Utilities;
+using Decryptor.Core.Utilities.Encryption;
+using Decryptor.Core.Utilities.Hashing;
+using Decryptor.Core.ViewModels;
+using Decryptor.WinUI.Utilities;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -26,13 +34,17 @@ namespace Decryptor.WinUI
     /// </summary>
     public partial class App : Application
     {
+        public static FrameworkElement MainRoot { get; private set; }
+        public static MainWindow MainWindow { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+
         }
 
         /// <summary>
@@ -42,10 +54,22 @@ namespace Decryptor.WinUI
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            m_window = new MainWindow();
-            m_window.Activate();
+            Ioc.Default.ConfigureServices(
+                new ServiceCollection()
+                .AddSingleton<ISettings, Settings>()
+                .AddSingleton<IClipboardManager, ClipboardManager>()
+                .AddSingleton<IAlertService, AlertService>()
+                .AddSingleton<IPasswordProtector, PasswordProtectorInterim>()
+                .AddSingleton<IEncryptionFactory, EncryptionFactory>()
+                .AddSingleton<IHashFactory, HashFactory>()
+                .AddSingleton<DecryptorViewModel>()
+                .AddSingleton<SettingsViewModel>()
+                .BuildServiceProvider());
+
+            MainWindow = new MainWindow();
+            MainWindow.Activate();
+            MainRoot = MainWindow.Content as FrameworkElement;
         }
 
-        private Window m_window;
     }
 }

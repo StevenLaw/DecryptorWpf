@@ -1,4 +1,6 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Decryptor.Core.ViewModels;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -23,9 +25,13 @@ namespace Decryptor.WinUI.Pages
     /// </summary>
     public sealed partial class TextPage : Page
     {
+        public DecryptorViewModel ViewModel => (DecryptorViewModel)DataContext;
+
         public TextPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+
+            DataContext = Ioc.Default.GetRequiredService<DecryptorViewModel>();
         }
     }
 }

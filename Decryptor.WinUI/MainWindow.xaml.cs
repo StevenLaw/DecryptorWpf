@@ -1,4 +1,9 @@
-﻿using Decryptor.WinUI.Pages;
+﻿using Decryptor.Core.Enums;
+using Decryptor.Core.ViewModels;
+using Decryptor.WinUI.Pages;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -11,8 +16,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage.Pickers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -24,9 +31,32 @@ namespace Decryptor.WinUI
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        public DecryptorViewModel ViewModel { get; }
+
         public MainWindow()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+
+            ViewModel = Ioc.Default.GetRequiredService<DecryptorViewModel>();
+
+            IntPtr windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            WindowId windowId = Win32Interop.GetWindowIdFromWindow(windowHandle);
+            var appWindow = AppWindow.GetFromWindowId(windowId);
+            appWindow.SetIcon(Path.Combine(Package.Current.InstalledLocation.Path, "BlueKey.ico"));
+        }
+
+        public FileOpenPicker GetFileOpenPicker()
+        {
+            FileOpenPicker openPicker = new()
+            {
+                ViewMode = PickerViewMode.Thumbnail,
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+            };
+
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
+
+            return openPicker;
         }
 
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
@@ -34,13 +64,9 @@ namespace Decryptor.WinUI
             if (args.IsSettingsInvoked)
             {
                 ContentFrame.Navigate(typeof(SettingsMainPage));
-                //NavView.Visibility = Visibility.Collapsed;
             }
             else
             {
-                // find NavigationViewItem with Content that equals InvokedItem
-                //var item = sender.MenuItems.OfType<NavigationViewItem>().First(x => (string)x.Content == (string)args.InvokedItem);
-                //NavView_Navigate(item);
                 if (args.InvokedItemContainer is NavigationViewItem item)
                 {
                     NavView_Navigate(item);
@@ -54,9 +80,11 @@ namespace Decryptor.WinUI
             {
                 case "text":
                     ContentFrame.Navigate(typeof(TextPage));
+                    ViewModel.Mode = (int)Modes.Text;
                     break;
                 case "file":
                     ContentFrame.Navigate(typeof(FilePage));
+                    ViewModel.Mode = (int)Modes.File;
                     break;
                 default:
                     break;
