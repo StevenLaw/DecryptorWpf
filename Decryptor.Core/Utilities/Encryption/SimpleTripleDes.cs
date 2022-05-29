@@ -1,15 +1,10 @@
-﻿using Decryptor.Core.Interfaces;
+﻿using Decryptor.Core.Enums;
+using Decryptor.Core.Interfaces;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace Decryptor.Core.Utilities.Encryption;
-
-public enum TripleDesKeySize : byte
-{
-    b128 = 0x0,
-    b192 = 0x1
-}
 
 public class SimpleTripleDes : ISimpleEncryption
 {

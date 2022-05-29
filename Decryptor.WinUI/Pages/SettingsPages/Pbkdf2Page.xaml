@@ -28,7 +28,8 @@
         <TextBlock Text="Iterations"
                    Style="{StaticResource Label}"
                    Grid.Row="1"/>
-        <NumberBox LargeChange="1000"
+        <NumberBox Value="{x:Bind ViewModel.Pbkdf2Iterations, Mode=TwoWay}"
+                   LargeChange="1000"
                    SmallChange="100"
                    Minimum="1"
                    SpinButtonPlacementMode="Inline"
@@ -39,7 +40,8 @@
                    Style="{StaticResource Label}"
                    Grid.Column="2"
                    Grid.Row="1"/>
-        <NumberBox LargeChange="10"
+        <NumberBox Value="{x:Bind ViewModel.Pbkdf2SaltSize, Mode=TwoWay}"
+                   LargeChange="10"
                    SmallChange="1"
                    Minimum="6"
                    Maximum="1024"
@@ -50,7 +52,8 @@
         <TextBlock Text="Hash Size"
                    Style="{StaticResource Label}"
                    Grid.Row="2"/>
-        <NumberBox LargeChange="100"
+        <NumberBox Value="{x:Bind ViewModel.Pbkdf2HashSize, Mode=TwoWay}"
+                   LargeChange="100"
                    SmallChange="1"
                    Minimum="6"
                    Maximum="1024"
@@ -62,7 +65,8 @@
                    Style="{StaticResource Label}"
                    Grid.Column="2"
                    Grid.Row="2"/>
-        <TextBox Grid.Column="3"
+        <TextBox Text="{x:Bind ViewModel.Pbkdf2Prefix, Mode=TwoWay}"
+                 Grid.Column="3"
                  Grid.Row="2"/>
     </Grid>
 </Page>

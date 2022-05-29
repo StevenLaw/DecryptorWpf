@@ -28,14 +28,17 @@
         <TextBlock Text="Iteration Count"
                    Style="{StaticResource Label}"
                    Grid.Row="1"/>
-        <ComboBox Grid.Column="1"
+        <ComboBox ItemsSource="{x:Bind ViewModel.ScryptIterationValues}"
+                  SelectedItem="{x:Bind ViewModel.ScryptIterations, Mode=TwoWay}"
+                  Grid.Column="1"
                   Grid.Row="1"/>
 
         <TextBlock Text="Block Size"
                    Style="{StaticResource Label}"
                    Grid.Column="2"
                    Grid.Row="1"/>
-        <NumberBox LargeChange="10"
+        <NumberBox Value="{x:Bind ViewModel.ScryptBlockCount, Mode=TwoWay}"
+                   LargeChange="10"
                    SmallChange="1"
                    Minimum="1"
                    SpinButtonPlacementMode="Inline"
@@ -45,7 +48,8 @@
         <TextBlock Text="Thread Count"
                    Style="{StaticResource Label}"
                    Grid.Row="2"/>
-        <NumberBox LargeChange="10"
+        <NumberBox Value="{x:Bind ViewModel.ScryptThreadCount, Mode=TwoWay}"
+                   LargeChange="10"
                    SmallChange="1"
                    Minimum="1"
                    SpinButtonPlacementMode="Inline"

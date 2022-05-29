@@ -1,4 +1,6 @@
-﻿using Decryptor.WinUI.Pages.SettingsPages;
+﻿using Decryptor.Core.ViewModels;
+using Decryptor.WinUI.Pages.SettingsPages;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -24,15 +26,23 @@ namespace Decryptor.WinUI.Pages
     /// </summary>
     public sealed partial class SettingsMainPage : Page
     {
+        public SettingsViewModel ViewModel => (SettingsViewModel)DataContext;
+
         public SettingsMainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+
+            DataContext = Ioc.Default.GetRequiredService<SettingsViewModel>();
+            ViewModel.Close += ViewModel_Close;
+        }
+
+        private void ViewModel_Close(object sender, EventArgs e)
+        {
+            App.MainWindow.ForceNavigateToText();
         }
 
         private void SettingsNavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            // find NavigationViewItem with Content that equals InvokedItem
-            //var item = sender.MenuItems.OfType<NavigationViewItem>().FirstOrDefault(x => (string)x.Content == (string)args.InvokedItem);
             if (args.InvokedItemContainer is NavigationViewItem item && item.Tag is not null)
             {
                 SettingsNavView_Navigate(item);
@@ -70,15 +80,8 @@ namespace Decryptor.WinUI.Pages
 
         private void SettingsNavView_Loaded(object sender, RoutedEventArgs e)
         {
-            foreach (NavigationViewItemBase item in SettingsNavView.MenuItems)
-            {
-                if (item is NavigationViewItem && item.Tag is not null && item.Tag.ToString() == "general")
-                {
-                    SettingsNavView.SelectedItem = item;
-                    ContentFrame.Navigate(typeof(GeneralEncryptionPage));
-                    break;
-                }
-            }
+            SettingsNavView.SelectedItem = General;
+            ContentFrame.Navigate(typeof(GeneralEncryptionPage));
         }
     }
 }

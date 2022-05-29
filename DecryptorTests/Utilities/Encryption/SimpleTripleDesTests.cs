@@ -1,4 +1,5 @@
-﻿using Decryptor.Core.Utilities.Encryption;
+﻿using Decryptor.Core.Enums;
+using Decryptor.Core.Utilities.Encryption;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;

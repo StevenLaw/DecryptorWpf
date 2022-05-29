@@ -45,6 +45,12 @@ namespace Decryptor.WinUI
             appWindow.SetIcon(Path.Combine(Package.Current.InstalledLocation.Path, "BlueKey.ico"));
         }
 
+        public void ForceNavigateToText()
+        {
+            ContentFrame.Navigate(typeof(TextPage));
+            ViewModel.Mode = (int)Modes.Text;
+        }
+
         public FileOpenPicker GetFileOpenPicker()
         {
             FileOpenPicker openPicker = new()

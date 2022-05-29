@@ -29,7 +29,8 @@
         <TextBlock Text="Degrees of Parallelism"
                    Style="{StaticResource Label}"
                    Grid.Row="1"/>
-        <NumberBox LargeChange="10"
+        <NumberBox Value="{x:Bind ViewModel.Argon2DegreesOfParallelism, Mode=TwoWay}"
+                   LargeChange="10"
                    SmallChange="1"
                    Minimum="1"
                    SpinButtonPlacementMode="Inline"
@@ -40,7 +41,8 @@
                    Style="{StaticResource Label}"
                    Grid.Column="2"
                    Grid.Row="1"/>
-        <NumberBox LargeChange="10"
+        <NumberBox Value="{x:Bind ViewModel.Argon2Iterations, Mode=TwoWay}"
+                   LargeChange="10"
                    SmallChange="1"
                    Minimum="1"
                    SpinButtonPlacementMode="Inline"
@@ -50,7 +52,8 @@
         <TextBlock Text="Memory Size"
                    Style="{StaticResource Label}"
                    Grid.Row="2"/>
-        <NumberBox LargeChange="100"
+        <NumberBox Value="{x:Bind ViewModel.Argon2MemorySize, Mode=TwoWay}"
+                   LargeChange="100"
                    SmallChange="1"
                    Minimum="4"
                    SpinButtonPlacementMode="Inline"
@@ -61,7 +64,8 @@
                    Style="{StaticResource Label}"
                    Grid.Column="2"
                    Grid.Row="2"/>
-        <NumberBox LargeChange="10"
+        <NumberBox Value="{x:Bind ViewModel.Argon2SaltLength, Mode=TwoWay}"
+                   LargeChange="10"
                    SmallChange="1"
                    Minimum="16"
                    Maximum="1024"
@@ -72,7 +76,8 @@
         <TextBlock Text="Hash Length"
                    Style="{StaticResource Label}"
                    Grid.Row="3"/>
-        <NumberBox LargeChange="10"
+        <NumberBox Value="{x:Bind ViewModel.Argon2HashLength, Mode=TwoWay}"
+                   LargeChange="10"
                    SmallChange="1"
                    Minimum="16"
                    Maximum="1024"

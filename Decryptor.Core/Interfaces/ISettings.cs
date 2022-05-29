@@ -1,5 +1,4 @@
 ﻿using Decryptor.Core.Enums;
-using Decryptor.Core.Utilities.Encryption;
 
 namespace Decryptor.Core.Interfaces;
 

@@ -73,8 +73,10 @@
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right"
                             Grid.Row="1">
-                    <Button Content="Save"/>
-                    <Button Content="Cancel"/>
+                    <Button Content="Save"
+                            Command="{x:Bind ViewModel.SaveCommand}"/>
+                    <Button Content="Cancel"
+                            Command="{x:Bind ViewModel.CancelCommand}"/>
                 </StackPanel>
             </Grid>
         </NavigationView>

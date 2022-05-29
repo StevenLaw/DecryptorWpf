@@ -1,18 +1,12 @@
 ﻿using Decryptor.Core.Enums;
 using Decryptor.Core.Interfaces;
 using Decryptor.Core.Messages;
-using Decryptor.Core.Utilities.Encryption;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace Decryptor.Core.ViewModels
 {
-    public struct EnumDisplay<T> where T : Enum
-    {
-        public string Text { get; set; }
-        public T Value { get; set; }
-    }
 
     public class SettingsViewModel : ObservableRecipient
     {
@@ -123,34 +117,19 @@ namespace Decryptor.Core.ViewModels
         #endregion
 
         #region Enum Lists
-        public EnumDisplay<EncryptionAlgorithm>[] EncryptionAlgorithms => Enum.GetValues(typeof(EncryptionAlgorithm))
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Can't be static and bound")]
+        public EncryptionAlgorithm[] EncryptionAlgorithms => Enum.GetValues(typeof(EncryptionAlgorithm))
             .Cast<EncryptionAlgorithm>()
-            .Select(e => new EnumDisplay<EncryptionAlgorithm>()
-            {
-                Text = e switch
-                {
-                    EncryptionAlgorithm.TripleDES => "Triple DES",
-                    _ => e.ToString()
-                },
-                Value = e
-            })
             .ToArray();
-        public EnumDisplay<HashAlgorithm>[] HashAlgorithms => Enum.GetValues(typeof(HashAlgorithm))
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Can't be static and bound")]
+        public HashAlgorithm[] HashAlgorithms => Enum.GetValues(typeof(HashAlgorithm))
             .Cast<HashAlgorithm>()
-            .Select(h => new EnumDisplay<HashAlgorithm>()
-            {
-                Text = h.ToString(),
-                Value = h
-            })
             .ToArray();
-        public EnumDisplay<TripleDesKeySize>[] TripleDesKeySizes => Enum.GetValues(typeof(TripleDesKeySize))
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Can't be static and bound")]
+        public TripleDesKeySize[] TripleDesKeySizes => Enum.GetValues(typeof(TripleDesKeySize))
             .Cast<TripleDesKeySize>()
-            .Select(t => new EnumDisplay<TripleDesKeySize>()
-            {
-                Text = t.ToString(),
-                Value = t
-            })
             .ToArray();
+        public int[] ScryptIterationValues { get; }
         #endregion
 
         #region Injected Properties
@@ -172,6 +151,17 @@ namespace Decryptor.Core.ViewModels
 
             SaveCommand = new AsyncRelayCommand(SaveExecute);
             CancelCommand = new RelayCommand(CancelExecute);
+
+            List<int> iterationValues = new();
+            int i = 2;
+            while(i > 0)
+            {
+                iterationValues.Add(i);
+                i *= 2;
+            }
+            ScryptIterationValues = iterationValues.ToArray();
+
+            _ = Load();
         }
 
         public async Task Load()
@@ -196,8 +186,9 @@ namespace Decryptor.Core.ViewModels
             TripleDesKeySize = Settings.TripleDesKeySize;
         }
 
-        private void CancelExecute()
+        private async void CancelExecute()
         {
+            await Load();
             Close?.Invoke(this, EventArgs.Empty);
         }
 

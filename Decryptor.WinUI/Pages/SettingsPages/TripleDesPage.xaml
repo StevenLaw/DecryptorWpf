@@ -25,7 +25,9 @@
         <TextBlock Text="Mode"
                    Style="{StaticResource Label}"
                    Grid.Row="1"/>
-        <ComboBox Grid.Column="1"
+        <ComboBox ItemsSource="{x:Bind ViewModel.TripleDesKeySizes}"
+                  SelectedItem="{x:Bind ViewModel.TripleDesKeySize, Mode=TwoWay}"
+                  Grid.Column="1"
                   Grid.Row="1"/>
     </Grid>
 </Page>

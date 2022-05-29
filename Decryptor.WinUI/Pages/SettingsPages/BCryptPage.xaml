@@ -25,7 +25,8 @@
         <TextBlock Text="Work Factor"
                    Style="{StaticResource Label}"
                    Grid.Row="1"/>
-        <NumberBox LargeChange="10"
+        <NumberBox Value="{x:Bind ViewModel.BCryptWorkFactor, Mode=TwoWay}"
+                   LargeChange="10"
                    SmallChange="1"
                    SpinButtonPlacementMode="Inline"
                    Grid.Column="1"

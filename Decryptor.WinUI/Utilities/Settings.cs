@@ -1,6 +1,5 @@
 ﻿using Decryptor.Core.Enums;
 using Decryptor.Core.Interfaces;
-using Decryptor.Core.Utilities.Encryption;
 using System.Threading.Tasks;
 using Windows.Storage;
 
