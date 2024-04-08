@@ -4,59 +4,58 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Decryptor.Utilities
+namespace Decryptor.Utilities;
+
+public static class PasswordProtector
 {
-    public static class PasswordProtector
+    private static readonly byte[] _entropy = Encoding.UTF8.GetBytes(":D(r>N7^&oCs;b^~3+[=33]NiakD7]J2[aEDlmIu`[hNRM/#KnbxCq:Nhps@!WW");
+
+    public static string GetEncryptedString(SecureString input)
     {
-        private static readonly byte[] entropy = Encoding.UTF8.GetBytes(":D(r>N7^&oCs;b^~3+[=33]NiakD7]J2[aEDlmIu`[hNRM/#KnbxCq:Nhps@!WW");
+        byte[] encryptedData = ProtectedData.Protect(Encoding.UTF8.GetBytes(input.ToInsecureString()),
+                                                     _entropy,
+                                                     DataProtectionScope.CurrentUser);
+        return Convert.ToBase64String(encryptedData);
+    }
 
-        public static string GetEncryptedString(SecureString input)
+    public static SecureString DecryptString(string encryptedData)
+    {
+        try
         {
-            byte[] encryptedData = ProtectedData.Protect(Encoding.UTF8.GetBytes(input.ToInsecureString()),
-                                                         entropy,
-                                                         DataProtectionScope.CurrentUser);
-            return Convert.ToBase64String(encryptedData);
+            byte[] decryptedData = ProtectedData.Unprotect(Convert.FromBase64String(encryptedData),
+                                                           _entropy,
+                                                           DataProtectionScope.CurrentUser);
+            return Encoding.UTF8.GetString(decryptedData).ToSecureString();
         }
+        catch
+        {
+            return new SecureString();
+        }
+    }
 
-        public static SecureString DecryptString(string encryptedData)
+    public static string ToInsecureString(this SecureString input)
+    {
+        if (input == null)
+            return string.Empty;
+        IntPtr ptr = Marshal.SecureStringToBSTR(input);
+        try
         {
-            try
-            {
-                byte[] decryptedData = ProtectedData.Unprotect(Convert.FromBase64String(encryptedData),
-                                                               entropy,
-                                                               DataProtectionScope.CurrentUser);
-                return Encoding.UTF8.GetString(decryptedData).ToSecureString();
-            }
-            catch 
-            {
-                return new SecureString();
-            }
+            return Marshal.PtrToStringBSTR(ptr);
         }
+        finally
+        {
+            Marshal.ZeroFreeBSTR(ptr);
+        }
+    }
 
-        public static string ToInsecureString(this SecureString input)
+    public static SecureString ToSecureString(this string input)
+    {
+        var secure = new SecureString();
+        foreach (char c in input)
         {
-            if (input == null)
-                return string.Empty;
-            IntPtr ptr = Marshal.SecureStringToBSTR(input);
-            try
-            {
-                return Marshal.PtrToStringBSTR(ptr);
-            }
-            finally
-            {
-                Marshal.ZeroFreeBSTR(ptr);
-            }
+            secure.AppendChar(c);
         }
-
-        public static SecureString ToSecureString(this string input)
-        {
-            var secure = new SecureString();
-            foreach (char c in input)
-            {
-                secure.AppendChar(c);
-            }
-            secure.MakeReadOnly();
-            return secure;
-        }
+        secure.MakeReadOnly();
+        return secure;
     }
 }

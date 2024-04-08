@@ -2,36 +2,30 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace Decryptor.ViewModel.Commands
+namespace Decryptor.ViewModel.Commands;
+
+class CopyCommand(DecryptorViewModel vm) : ICommand
 {
-    class CopyCommand : ICommand
+    public DecryptorViewModel VM { get; set; } = vm;
+    public event EventHandler CanExecuteChanged
     {
-        public DecryptorViewModel VM { get; set; }
-        public event EventHandler CanExecuteChanged
+        add
         {
-            add
-            {
-                CommandManager.RequerySuggested += value;
-            }
-            remove
-            {
-                CommandManager.RequerySuggested -= value;
-            }
+            CommandManager.RequerySuggested += value;
         }
+        remove
+        {
+            CommandManager.RequerySuggested -= value;
+        }
+    }
 
-        public CopyCommand(DecryptorViewModel vm)
-        {
-            VM = vm;
-        }
+    public bool CanExecute(object parameter)
+    {
+        return !string.IsNullOrEmpty(VM.Result);
+    }
 
-        public bool CanExecute(object parameter)
-        {
-            return !string.IsNullOrEmpty(VM.Result);
-        }
-
-        public void Execute(object parameter)
-        {
-            Clipboard.SetText(VM.Result);
-        }
+    public void Execute(object parameter)
+    {
+        Clipboard.SetText(VM.Result);
     }
 }

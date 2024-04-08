@@ -1,37 +1,31 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace Decryptor.ViewModel.Commands
+namespace Decryptor.ViewModel.Commands;
+
+class ClearCommand(DecryptorViewModel vm) : ICommand
 {
-    class ClearCommand : ICommand
+    public DecryptorViewModel VM { get; set; } = vm;
+    public event EventHandler CanExecuteChanged
     {
-        public DecryptorViewModel VM { get; set; }
-        public event EventHandler CanExecuteChanged
+        add
         {
-            add
-            {
-                CommandManager.RequerySuggested += value;
-            }
-            remove
-            {
-                CommandManager.RequerySuggested -= value;
-            }
+            CommandManager.RequerySuggested += value;
         }
+        remove
+        {
+            CommandManager.RequerySuggested -= value;
+        }
+    }
 
-        public ClearCommand(DecryptorViewModel vm)
-        {
-            VM = vm;
-        }
+    public bool CanExecute(object parameter)
+    {
+        return !string.IsNullOrEmpty(VM.Result) || VM.CheckSucceeded != null;
+    }
 
-        public bool CanExecute(object parameter)
-        {
-            return !string.IsNullOrEmpty(VM.Result) || VM.CheckSucceeded != null;
-        }
-
-        public void Execute(object parameter)
-        {
-            VM.Result = string.Empty;
-            VM.CheckSucceeded = null;
-        }
+    public void Execute(object parameter)
+    {
+        VM.Result = string.Empty;
+        VM.CheckSucceeded = null;
     }
 }

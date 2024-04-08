@@ -1,20 +1,19 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace Decryptor.Interfaces
+namespace Decryptor.Interfaces;
+
+public interface IHash
 {
-    public interface IHash
-    {
-        Task<bool> CheckFileHashAsync(string filename, string hash);
+    Task<bool> CheckFileHashAsync(string filename, string hash);
 
-        Task<bool> CheckHashAsync(string clearText, string hash);
+    Task<bool> CheckHashAsync(string clearText, string hash);
 
-        Task<bool> CheckHashAsync(Stream stream, string hash);
+    Task<bool> CheckHashAsync(Stream stream, string hash);
 
-        Task<string> GetFileHashAsync(string filename);
+    Task<string> GetFileHashAsync(string filename);
 
-        Task<string> GetHashAsync(string clearText);
+    Task<string> GetHashAsync(string clearText);
 
-        Task<string> GetHashAsync(Stream stream);
-    }
+    Task<string> GetHashAsync(Stream stream);
 }

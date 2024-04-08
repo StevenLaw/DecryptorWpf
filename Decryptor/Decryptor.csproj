@@ -1,71 +1,65 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <ApplicationIcon>Resources\BlueKey.ico</ApplicationIcon>
-    <Authors>Steven Law</Authors>
-    <Copyright>Copyright © Steven Law</Copyright>
-    <Description>A simple tool for getting encrypted strings or hashes using a variety of algorithms.</Description>
-    <AssemblyVersion>1.1.7.0</AssemblyVersion>
-    <FileVersion>1.1.7.0</FileVersion>
-    <Version>1.1.7</Version>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\BlueKey.ico" />
-    <None Remove="Resources\iconmonstr-check-mark-14-16.png" />
-    <None Remove="Resources\iconmonstr-clipboard-8-16.png" />
-    <None Remove="Resources\iconmonstr-door-8-thick.png" />
-    <None Remove="Resources\iconmonstr-eraser-2-16.png" />
-    <None Remove="Resources\iconmonstr-folder-22-16.png" />
-    <None Remove="Resources\iconmonstr-gear-2-16.png" />
-    <None Remove="Resources\iconmonstr-hashtag-1-16.png" />
-    <None Remove="Resources\iconmonstr-help-6-16.png" />
-    <None Remove="Resources\iconmonstr-key-2-16.png" />
-    <None Remove="Resources\iconmonstr-lock-14-16.png" />
-    <None Remove="Resources\iconmonstr-x-mark-5-16.png" />
-    <None Remove="Resources\magnifier-check.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resources\BlueKey.ico" />
-    <Resource Include="Resources\iconmonstr-check-mark-14-16.png" />
-    <Resource Include="Resources\iconmonstr-clipboard-8-16.png" />
-    <Resource Include="Resources\iconmonstr-door-8-thick.png" />
-    <Resource Include="Resources\iconmonstr-eraser-2-16.png" />
-    <Resource Include="Resources\iconmonstr-folder-22-16.png" />
-    <Resource Include="Resources\iconmonstr-gear-2-16.png" />
-    <Resource Include="Resources\iconmonstr-hashtag-1-16.png" />
-    <Resource Include="Resources\iconmonstr-help-6-16.png" />
-    <Resource Include="Resources\iconmonstr-key-2-16.png" />
-    <Resource Include="Resources\iconmonstr-lock-14-16.png" />
-    <Resource Include="Resources\iconmonstr-x-mark-5-16.png" />
-    <Resource Include="Resources\magnifier-check.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="BCrypt" Version="1.0.0" />
-    <PackageReference Include="DotNetProjects.Extended.Wpf.Toolkit" Version="4.6.96" />
-    <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
-    <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.2.1" />
-    <PackageReference Include="Scrypt.NET" Version="1.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon>Resources\BlueKey.ico</ApplicationIcon>
+		<Authors>Steven Law</Authors>
+		<Copyright>Copyright © Steven Law</Copyright>
+		<Description>A simple tool for getting encrypted strings or hashes using a variety of algorithms.</Description>
+		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+		<AssemblyVersion>1.1.8.0</AssemblyVersion>
+		<FileVersion>1.1.8.0</FileVersion>
+		<Version>1.1.8</Version>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Remove="Resources\BlueKey.ico" />
+		<None Remove="Resources\iconmonstr-check-mark-14-16.png" />
+		<None Remove="Resources\iconmonstr-clipboard-8-16.png" />
+		<None Remove="Resources\iconmonstr-door-8-thick.png" />
+		<None Remove="Resources\iconmonstr-eraser-2-16.png" />
+		<None Remove="Resources\iconmonstr-folder-22-16.png" />
+		<None Remove="Resources\iconmonstr-gear-2-16.png" />
+		<None Remove="Resources\iconmonstr-hashtag-1-16.png" />
+		<None Remove="Resources\iconmonstr-help-6-16.png" />
+		<None Remove="Resources\iconmonstr-key-2-16.png" />
+		<None Remove="Resources\iconmonstr-lock-14-16.png" />
+		<None Remove="Resources\iconmonstr-x-mark-5-16.png" />
+		<None Remove="Resources\magnifier-check.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<Resource Include="Resources\BlueKey.ico" />
+		<Resource Include="Resources\iconmonstr-check-mark-14-16.png" />
+		<Resource Include="Resources\iconmonstr-clipboard-8-16.png" />
+		<Resource Include="Resources\iconmonstr-door-8-thick.png" />
+		<Resource Include="Resources\iconmonstr-eraser-2-16.png" />
+		<Resource Include="Resources\iconmonstr-folder-22-16.png" />
+		<Resource Include="Resources\iconmonstr-gear-2-16.png" />
+		<Resource Include="Resources\iconmonstr-hashtag-1-16.png" />
+		<Resource Include="Resources\iconmonstr-help-6-16.png" />
+		<Resource Include="Resources\iconmonstr-key-2-16.png" />
+		<Resource Include="Resources\iconmonstr-lock-14-16.png" />
+		<Resource Include="Resources\iconmonstr-x-mark-5-16.png" />
+		<Resource Include="Resources\magnifier-check.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="BCrypt" Version="1.0.0" />
+		<PackageReference Include="DotNetProjects.Extended.Wpf.Toolkit" Version="5.0.115" />
+		<PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
+		<PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.3.0" />
+		<PackageReference Include="Scrypt.NET" Version="1.3.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="Properties\Settings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+	</ItemGroup>
 </Project>

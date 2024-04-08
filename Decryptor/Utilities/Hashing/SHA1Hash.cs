@@ -5,46 +5,31 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Decryptor.Utilities.Hashing
+namespace Decryptor.Utilities.Hashing;
+
+public class SHA1Hash : IHash
 {
-    public class SHA1Hash : IHash
+    public async Task<bool> CheckFileHashAsync(string filename, string hash) =>
+        (await GetFileHashAsync(filename)).Equals(hash, StringComparison.OrdinalIgnoreCase);
+
+    public async Task<bool> CheckHashAsync(string clearText, string hash) =>
+        (await GetHashAsync(clearText)).Equals(hash, StringComparison.OrdinalIgnoreCase);
+
+    public async Task<bool> CheckHashAsync(Stream stream, string hash) =>
+        (await GetHashAsync(stream)).Equals(hash, StringComparison.OrdinalIgnoreCase);
+
+    public async Task<string> GetFileHashAsync(string Filename)
     {
-        public async Task<bool> CheckFileHashAsync(string filename, string hash) =>
-            (await GetFileHashAsync(filename)).Equals(hash, StringComparison.OrdinalIgnoreCase);
+        using var fileStream = new FileStream(Filename, FileMode.Open);
+        return await GetHashAsync(fileStream);
+    }
 
-        public async Task<bool> CheckHashAsync(string clearText, string hash) =>
-            (await GetHashAsync(clearText)).Equals(hash, StringComparison.OrdinalIgnoreCase);
-
-        public async Task<bool> CheckHashAsync(Stream stream, string hash) =>
-            (await GetHashAsync(stream)).Equals(hash, StringComparison.OrdinalIgnoreCase);
-
-        public async Task<string> GetFileHashAsync(string Filename)
+    public Task<string> GetHashAsync(string clearText)
+    {
+        return Task.Run(() =>
         {
-            using var fileStream = new FileStream(Filename, FileMode.Open);
-            return await GetHashAsync(fileStream);
-        }
-
-        public Task<string> GetHashAsync(string clearText)
-        {
-            return Task.Run(() =>
-            {
-                using var sha1 = SHA1.Create();
-                byte[] bytes = Encoding.UTF8.GetBytes(clearText);
-                byte[] hash = sha1.ComputeHash(bytes);
-
-                var sb = new StringBuilder();
-                foreach (byte b in hash)
-                {
-                    sb.AppendFormat("{0:x2}", b);
-                }
-                return sb.ToString();
-            });
-        }
-
-        public async Task<string> GetHashAsync(Stream stream)
-        {
-            using var sha1 = SHA1.Create();
-            byte[] hash = await sha1.ComputeHashAsync(stream);
+            byte[] bytes = Encoding.UTF8.GetBytes(clearText);
+            byte[] hash = SHA1.HashData(bytes);
 
             var sb = new StringBuilder();
             foreach (byte b in hash)
@@ -52,6 +37,19 @@ namespace Decryptor.Utilities.Hashing
                 sb.AppendFormat("{0:x2}", b);
             }
             return sb.ToString();
+        });
+    }
+
+    public async Task<string> GetHashAsync(Stream stream)
+    {
+        using var sha1 = SHA1.Create();
+        byte[] hash = await sha1.ComputeHashAsync(stream);
+
+        var sb = new StringBuilder();
+        foreach (byte b in hash)
+        {
+            sb.AppendFormat("{0:x2}", b);
         }
+        return sb.ToString();
     }
 }

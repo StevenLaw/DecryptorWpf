@@ -1,215 +1,213 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Decryptor.Utilities.Encryption.Tests
+namespace Decryptor.Utilities.Encryption.Tests;
+
+[TestClass()]
+public class SimpleAesTests
 {
-    [TestClass()]
-    public class SimpleAesTests
+    private readonly SecureString _key;
+    private const string INSECURE_KEY = "This is an insecure key for testing";
+    private const string SAMPLE = "This is a sample for encrypting";
+    private const string RESULT = "/u7rOUO9GCXJGN269dag0QU26yR4WJkLPvcLjcWoxYc=";
+    private const string TEST_FILE = "Testing.txt";
+    private const string CRYPT_FILE = "Testing.txt.aes";
+    private const string TEST_CRYPT_FILE = "Crypt.txt.aes";
+    private const string OUT_FILE = "Out.txt";
+
+    public SimpleAesTests()
     {
-        private readonly SecureString key;
-        private const string insecureKey = "This is an insecure key for testing";
-        private const string sample = "This is a sample for encrypting";
-        private const string result = "/u7rOUO9GCXJGN269dag0QU26yR4WJkLPvcLjcWoxYc=";
-        private const string testFile = "Testing.txt";
-        private const string cryptFile = "Testing.txt.aes";
-        private const string testCryptFile = "Crypt.txt.aes";
-        private const string outFile = "Out.txt";
-
-        public SimpleAesTests()
+        _key = new SecureString();
+        foreach (char c in INSECURE_KEY)
         {
-            key = new SecureString();
-            foreach (char c in insecureKey)
-            {
-                key.AppendChar(c);
-            }
-            key.MakeReadOnly();
+            _key.AppendChar(c);
         }
+        _key.MakeReadOnly();
+    }
 
-        [TestInitialize]
-        public void InitTests()
-        {
-            if (File.Exists(cryptFile))
-                File.Delete(cryptFile);
-            if (File.Exists(outFile))
-                File.Delete(outFile);
-        }
+    [TestInitialize]
+    public void InitTests()
+    {
+        if (File.Exists(CRYPT_FILE))
+            File.Delete(CRYPT_FILE);
+        if (File.Exists(OUT_FILE))
+            File.Delete(OUT_FILE);
+    }
 
-        [TestMethod()]
-        public async Task EncryptTest()
-        {
-            // Arrange
-            var aes = new SimpleAes(key);
+    [TestMethod()]
+    public async Task EncryptTest()
+    {
+        // Arrange
+        var aes = new SimpleAes(_key);
 
-            // Act
-            string encrypted = await aes.EncryptAsync(sample);
+        // Act
+        string encrypted = await aes.EncryptAsync(SAMPLE);
 
-            // Assert
-            Assert.AreEqual(result, encrypted);
-        }
+        // Assert
+        Assert.AreEqual(RESULT, encrypted);
+    }
 
-        [TestMethod()]
-        public async Task EncryptStreamTest()
-        {
-            // Arrange
-            var aes = new SimpleAes(key);
-            using var ms = new MemoryStream(Encoding.UTF8.GetBytes(sample));
+    [TestMethod()]
+    public async Task EncryptStreamTest()
+    {
+        // Arrange
+        var aes = new SimpleAes(_key);
+        using var ms = new MemoryStream(Encoding.UTF8.GetBytes(SAMPLE));
 
-            // Act
-            byte[] encrypted = await aes.EncryptAsync(ms);
-            string encStr = Convert.ToBase64String(encrypted);
+        // Act
+        byte[] encrypted = await aes.EncryptAsync(ms);
+        string encStr = Convert.ToBase64String(encrypted);
 
-            // Assert
-            Assert.AreEqual(result, encStr);
-        }
+        // Assert
+        Assert.AreEqual(RESULT, encStr);
+    }
 
-        [TestMethod()]
-        public async Task EncryptFileTest()
-        {
-            // Arrange
-            var aes = new SimpleAes(key);
+    [TestMethod()]
+    public async Task EncryptFileTest()
+    {
+        // Arrange
+        var aes = new SimpleAes(_key);
 
-            // Act
-            await aes.EncryptAsync(testFile, cryptFile);
+        // Act
+        await aes.EncryptAsync(TEST_FILE, CRYPT_FILE);
 
-            // Assert
-            Assert.IsTrue(File.Exists(cryptFile));
-        }
+        // Assert
+        Assert.IsTrue(File.Exists(CRYPT_FILE));
+    }
 
-        [TestMethod()]
-        public async Task DecryptTest()
-        {
-            // Arrange
-            var aes = new SimpleAes(key);
+    [TestMethod()]
+    public async Task DecryptTest()
+    {
+        // Arrange
+        var aes = new SimpleAes(_key);
 
-            // Act
-            string decrypted = await aes.DecryptAsync(result);
+        // Act
+        string decrypted = await aes.DecryptAsync(RESULT);
 
-            // Assert
-            Assert.AreEqual(sample, decrypted);
-        }
+        // Assert
+        Assert.AreEqual(SAMPLE, decrypted);
+    }
 
-        [TestMethod()]
-        public async Task DecryptStreamTest()
-        {
-            // Arrange
-            var aes = new SimpleAes(key);
-            var bytes = Convert.FromBase64String(result);
-            using var ms = new MemoryStream(bytes);
+    [TestMethod()]
+    public async Task DecryptStreamTest()
+    {
+        // Arrange
+        var aes = new SimpleAes(_key);
+        var bytes = Convert.FromBase64String(RESULT);
+        using var ms = new MemoryStream(bytes);
 
-            // Act
-            byte[] decrypted = await aes.DecryptAsync(ms);
-            var decStr = Encoding.UTF8.GetString(decrypted);
+        // Act
+        byte[] decrypted = await aes.DecryptAsync(ms);
+        var decStr = Encoding.UTF8.GetString(decrypted);
 
-            // Assert
-            Assert.AreEqual(sample, decStr);
-        }
+        // Assert
+        Assert.AreEqual(SAMPLE, decStr);
+    }
 
-        [TestMethod()]
-        public async Task DecryptFileTest()
-        {
-            // Arrange
-            var aes = new SimpleAes(key);
+    [TestMethod()]
+    public async Task DecryptFileTest()
+    {
+        // Arrange
+        var aes = new SimpleAes(_key);
 
-            // Act
-            await aes.DecryptAsync(testCryptFile, outFile);
+        // Act
+        await aes.DecryptAsync(TEST_CRYPT_FILE, OUT_FILE);
 
-            // Assert
-            Assert.IsTrue(File.Exists(outFile));
-        }
+        // Assert
+        Assert.IsTrue(File.Exists(OUT_FILE));
+    }
 
-        [TestMethod]
-        public async Task EncryptDecryptTest()
-        {
-            // Arrange
-            var aes = new SimpleAes(key);
+    [TestMethod]
+    public async Task EncryptDecryptTest()
+    {
+        // Arrange
+        var aes = new SimpleAes(_key);
 
-            // Act
-            string encrypted = await aes.EncryptAsync(sample);
-            string decrypted = await aes.DecryptAsync(encrypted);
+        // Act
+        string encrypted = await aes.EncryptAsync(SAMPLE);
+        string decrypted = await aes.DecryptAsync(encrypted);
 
-            // Assert
-            Assert.AreEqual(sample, decrypted);
-        }
+        // Assert
+        Assert.AreEqual(SAMPLE, decrypted);
+    }
 
-        [TestMethod]
-        public async Task EncryptDecryptStreamTest()
-        {
-            // Arrange
-            var aes = new SimpleAes(key);
-            using var inStream = new MemoryStream(Encoding.UTF8.GetBytes(sample));
+    [TestMethod]
+    public async Task EncryptDecryptStreamTest()
+    {
+        // Arrange
+        var aes = new SimpleAes(_key);
+        using var inStream = new MemoryStream(Encoding.UTF8.GetBytes(SAMPLE));
 
-            // Act
-            byte[] encrypted = await aes.EncryptAsync(inStream);
-            using var outStream = new MemoryStream(encrypted);
-            byte[] decrypted = await aes.DecryptAsync(outStream);
-            string decStr = Encoding.UTF8.GetString(decrypted);
+        // Act
+        byte[] encrypted = await aes.EncryptAsync(inStream);
+        using var outStream = new MemoryStream(encrypted);
+        byte[] decrypted = await aes.DecryptAsync(outStream);
+        string decStr = Encoding.UTF8.GetString(decrypted);
 
-            // Assert
-            Assert.AreEqual(sample, decStr);
-        }
+        // Assert
+        Assert.AreEqual(SAMPLE, decStr);
+    }
 
-        [TestMethod]
-        public async Task EncryptDecryptFileTest()
-        {
-            // Arrange
-            var aes = new SimpleAes(key);
+    [TestMethod]
+    public async Task EncryptDecryptFileTest()
+    {
+        // Arrange
+        var aes = new SimpleAes(_key);
 
-            // Act
-            await aes.EncryptAsync(testFile, cryptFile);
-            await aes.DecryptAsync(cryptFile, outFile);
+        // Act
+        await aes.EncryptAsync(TEST_FILE, CRYPT_FILE);
+        await aes.DecryptAsync(CRYPT_FILE, OUT_FILE);
 
-            // Assert
-            Assert.AreEqual(File.ReadAllText(testFile), File.ReadAllText(outFile));
-        }
+        // Assert
+        Assert.AreEqual(File.ReadAllText(TEST_FILE), File.ReadAllText(OUT_FILE));
+    }
 
-        [TestMethod]
-        public async Task DecryptEncryptTest()
-        {
-            // Arrange
-            var aes = new SimpleAes(key);
+    [TestMethod]
+    public async Task DecryptEncryptTest()
+    {
+        // Arrange
+        var aes = new SimpleAes(_key);
 
-            // Act
-            string decrypted = await aes.DecryptAsync(result);
-            string encrypted = await aes.EncryptAsync(decrypted);
+        // Act
+        string decrypted = await aes.DecryptAsync(RESULT);
+        string encrypted = await aes.EncryptAsync(decrypted);
 
-            // Assert
-            Assert.AreEqual(result, encrypted);
-        }
+        // Assert
+        Assert.AreEqual(RESULT, encrypted);
+    }
 
-        [TestMethod]
-        public async Task DecryptEncryptStreamTest()
-        {
-            // Arrange
-            var aes = new SimpleAes(key);
-            using var inStream = new MemoryStream(Convert.FromBase64String(result));
+    [TestMethod]
+    public async Task DecryptEncryptStreamTest()
+    {
+        // Arrange
+        var aes = new SimpleAes(_key);
+        using var inStream = new MemoryStream(Convert.FromBase64String(RESULT));
 
-            // Act
-            byte[] decrypted = await aes.DecryptAsync(inStream);
-            using var outStream = new MemoryStream(decrypted);
-            byte[] encrypted = await aes.EncryptAsync(outStream);
-            string encStr = Convert.ToBase64String(encrypted);
+        // Act
+        byte[] decrypted = await aes.DecryptAsync(inStream);
+        using var outStream = new MemoryStream(decrypted);
+        byte[] encrypted = await aes.EncryptAsync(outStream);
+        string encStr = Convert.ToBase64String(encrypted);
 
-            // Assert
-            Assert.AreEqual(result, encStr);
-        }
+        // Assert
+        Assert.AreEqual(RESULT, encStr);
+    }
 
-        [TestMethod]
-        public async Task DecryptEncryptFileTest()
-        {
-            // Arrange
-            var aes = new SimpleAes(key);
+    [TestMethod]
+    public async Task DecryptEncryptFileTest()
+    {
+        // Arrange
+        var aes = new SimpleAes(_key);
 
-            // Act
-            await aes.DecryptAsync(testCryptFile, outFile);
-            await aes.EncryptAsync(outFile, cryptFile);
+        // Act
+        await aes.DecryptAsync(TEST_CRYPT_FILE, OUT_FILE);
+        await aes.EncryptAsync(OUT_FILE, CRYPT_FILE);
 
-            // Assert
-            Assert.AreEqual(File.ReadAllText(testCryptFile), File.ReadAllText(cryptFile));
-        }
+        // Assert
+        Assert.AreEqual(File.ReadAllText(TEST_CRYPT_FILE), File.ReadAllText(CRYPT_FILE));
     }
 }

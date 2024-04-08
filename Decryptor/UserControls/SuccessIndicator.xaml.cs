@@ -1,59 +1,58 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Decryptor.UserControls
+namespace Decryptor.UserControls;
+
+/// <summary>
+/// Interaction logic for SuccessIndicator.xaml
+/// </summary>
+public partial class SuccessIndicator : UserControl
 {
-    /// <summary>
-    /// Interaction logic for SuccessIndicator.xaml
-    /// </summary>
-    public partial class SuccessIndicator : UserControl
+
+    public bool? Success
     {
+        get { return (bool?)GetValue(SuccessProperty); }
+        set { SetValue(SuccessProperty, value); }
+    }
 
-        public bool? Success
+    // Using a DependencyProperty as the backing store for Success.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty SuccessProperty =
+        DependencyProperty.Register("Success",
+                                    typeof(bool?),
+                                    typeof(SuccessIndicator),
+                                    new PropertyMetadata(null, new PropertyChangedCallback(OnSuccessPropertyChanged)));
+
+    private static void OnSuccessPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (sender is SuccessIndicator si)
         {
-            get { return (bool?)GetValue(SuccessProperty); }
-            set { SetValue(SuccessProperty, value); }
+            bool? success = e.NewValue as bool?;
+            si.SetIndicator(success);
         }
+    }
 
-        // Using a DependencyProperty as the backing store for Success.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty SuccessProperty =
-            DependencyProperty.Register("Success",
-                                        typeof(bool?),
-                                        typeof(SuccessIndicator),
-                                        new PropertyMetadata(null, new PropertyChangedCallback(OnSuccessPropertyChanged)));
-
-        private static void OnSuccessPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    private void SetIndicator(bool? success)
+    {
+        if (success == null)
         {
-            if (sender is SuccessIndicator si)
-            {
-                bool? success = e.NewValue as bool?;
-                si.SetIndicator(success);
-            }
+            imgFail.Visibility = Visibility.Collapsed;
+            imgSuccess.Visibility = Visibility.Collapsed;
         }
-
-        private void SetIndicator(bool? success)
+        else if (success == true)
         {
-            if (success == null)
-            {
-                imgFail.Visibility = Visibility.Collapsed;
-                imgSuccess.Visibility = Visibility.Collapsed;
-            }
-            else if (success == true)
-            {
-                imgFail.Visibility = Visibility.Collapsed;
-                imgSuccess.Visibility = Visibility.Visible;
-            }
-            else if (success == false)
-            {
-                imgFail.Visibility = Visibility.Visible;
-                imgSuccess.Visibility = Visibility.Collapsed;
-            }
+            imgFail.Visibility = Visibility.Collapsed;
+            imgSuccess.Visibility = Visibility.Visible;
         }
-
-        public SuccessIndicator()
+        else if (success == false)
         {
-            InitializeComponent();
-            SetIndicator(Success);
+            imgFail.Visibility = Visibility.Visible;
+            imgSuccess.Visibility = Visibility.Collapsed;
         }
+    }
+
+    public SuccessIndicator()
+    {
+        InitializeComponent();
+        SetIndicator(Success);
     }
 }

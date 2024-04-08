@@ -4,56 +4,50 @@ using System;
 using System.IO;
 using System.Windows.Input;
 
-namespace Decryptor.ViewModel.Commands
+namespace Decryptor.ViewModel.Commands;
+
+class CheckHashCommand(DecryptorViewModel vm) : ICommand
 {
-    class CheckHashCommand : ICommand
+    public DecryptorViewModel VM { get; set; } = vm;
+    public event EventHandler CanExecuteChanged
     {
-        public DecryptorViewModel VM { get; set; }
-        public event EventHandler CanExecuteChanged
+        add
         {
-            add
-            {
-                CommandManager.RequerySuggested += value;
-            }
-            remove
-            {
-                CommandManager.RequerySuggested -= value;
-            }
+            CommandManager.RequerySuggested += value;
         }
-
-        public CheckHashCommand(DecryptorViewModel vm)
+        remove
         {
-            VM = vm;
+            CommandManager.RequerySuggested -= value;
         }
+    }
 
-        public bool CanExecute(object parameter)
+    public bool CanExecute(object parameter)
+    {
+        return VM.ModeEnum switch
         {
-            return VM.ModeEnum switch
+            Enums.Modes.Text => VM.PasswordLength > 0 && !string.IsNullOrEmpty(VM.Text),
+            Enums.Modes.File => !string.IsNullOrWhiteSpace(VM.Filename) && !string.IsNullOrEmpty(VM.Checksum),
+            _ => throw new NotImplementedException(),
+        };
+    }
+
+    public async void Execute(object parameter)
+    {
+        var hash = HashFactory.Create(VM.HashAlgorithm);
+        VM.IsBusy = true;
+        try
+        {
+            VM.CheckSucceeded = VM.ModeEnum switch
             {
-                Enums.Modes.Text => VM.PasswordLength > 0 && !string.IsNullOrEmpty(VM.Text),
-                Enums.Modes.File => !string.IsNullOrWhiteSpace(VM.Filename) && !string.IsNullOrEmpty(VM.Checksum),
+                Enums.Modes.Text => await hash.CheckHashAsync(VM.Password.ToInsecureString(), VM.Text),
+                Enums.Modes.File => await hash.CheckFileHashAsync(VM.Filename, VM.Checksum),
                 _ => throw new NotImplementedException(),
             };
         }
-
-        public async void Execute(object parameter)
+        catch (FileNotFoundException ex)
         {
-            var hash = HashFactory.Create(VM.HashAlgorithm);
-            VM.IsBusy = true;
-            try
-            {
-                VM.CheckSucceeded = VM.ModeEnum switch
-                {
-                    Enums.Modes.Text => await hash.CheckHashAsync(VM.Password.ToInsecureString(), VM.Text),
-                    Enums.Modes.File => await hash.CheckFileHashAsync(VM.Filename, VM.Checksum),
-                    _ => throw new NotImplementedException(),
-                };
-            }
-            catch (FileNotFoundException ex)
-            {
-                VM.SendMessage($"Couldn't find file {VM.Filename}", "File not found", MessageType.Error, ex);
-            }
-            VM.IsBusy = false;
+            VM.SendMessage($"Couldn't find file {VM.Filename}", "File not found", MessageType.Error, ex);
         }
+        VM.IsBusy = false;
     }
 }

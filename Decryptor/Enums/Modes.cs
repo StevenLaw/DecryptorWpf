@@ -1,8 +1,7 @@
-﻿namespace Decryptor.Enums
+﻿namespace Decryptor.Enums;
+
+public enum Modes
 {
-    public enum Modes
-    {
-        Text,
-        File
-    }
+    Text,
+    File
 }
